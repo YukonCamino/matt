@@ -12,13 +12,13 @@
     --bg:#fff;--fg:#111;--muted:#5a5a5a;--line:#dcdcdc;--card:#fff;
     --accent:#0b5fff;--yes:#14703a;--no:#8a8a8a;--maybe:#8a5a00;
     --warn-bg:#fff3dd;--warn-fg:#6b4300;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
-    --bed:#c2410c;--wash:#0b5fff;--food:#14703a;--svc:#7c3aed;--house:#555;
+    --bed:#c2410c;--wash:#0b5fff;--food:#14703a;--svc:#7c3aed;--house:#555;--lib:#0e7490;--wifi:#7c3aed;--cafe:#92400e;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --bg:#111;--fg:#f2f2f2;--muted:#a9a9a9;--line:#333;--card:#1b1b1b;
     --accent:#7fb0ff;--yes:#5fcf8e;--no:#777;--maybe:#e8b45f;
     --warn-bg:#3a2d12;--warn-fg:#ffd79a;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
-    --bed:#fb923c;--wash:#7fb0ff;--food:#5fcf8e;--svc:#c4a5fd;--house:#aaa;
+    --bed:#fb923c;--wash:#7fb0ff;--food:#5fcf8e;--svc:#c4a5fd;--house:#aaa;--lib:#5ad1e6;--wifi:#c4a5fd;--cafe:#e0a36b;
   }}
   html{-webkit-text-size-adjust:100%}
   body{background:var(--bg);color:var(--fg);padding-bottom:48px;
@@ -124,11 +124,13 @@
   <div class="mapbox">
     <div id="map"></div>
     <div class="legend">
-      <span><i style="background:var(--bed)"></i>Beds</span>
-      <span><i style="background:var(--wash)"></i>Showers &amp; laundry</span>
-      <span><i style="background:var(--food)"></i>Food</span>
-      <span><i style="background:var(--svc)"></i>ID &amp; phones</span>
-      <span><i style="background:var(--house)"></i>Housing</span>
+      <span data-tab="help"><i style="background:var(--bed)"></i>Beds</span>
+      <span data-tab="help"><i style="background:var(--wash)"></i>Showers &amp; laundry</span>
+      <span data-tab="help"><i style="background:var(--food)"></i>Food</span>
+      <span data-tab="help"><i style="background:var(--house)"></i>Housing</span>
+      <span data-tab="lib" hidden><i style="background:var(--lib)"></i>Library</span>
+      <span data-tab="wifi" hidden><i style="background:var(--wifi)"></i>Free wifi</span>
+      <span data-tab="wifi" hidden><i style="background:var(--cafe)"></i>Café</span>
       <span><i style="background:#111;border:2px solid #fff;box-shadow:0 0 0 1px #111"></i>Amtrak Station</span>
     </div>
     <button class="near" id="near">Show what is closest to me</button>
@@ -147,13 +149,13 @@
 
   <div class="card" data-k="compass">
     <div class="name">Compass Hygiene Center &amp; Day Center</div>
-    <div class="addr">77 S Washington St — a few minutes from King Street Station</div>
-    <div class="hours">Showers &amp; laundry: <b>Mon–Fri 7am–4pm, Sat 8am–12pm</b><br>
+    <div class="addr">210 Alaskan Way S — look for the orange archway at S Washington St</div>
+    <div class="hours">Showers &amp; laundry: <b>Mon–Fri 8:30am–4pm, Sat 8am–12pm</b><br>
       Day center: <b>Mon–Fri 9am–4pm</b></div>
     <ul class="fac">
       <li class="y">Showers</li><li class="y">Laundry</li>
       <li class="y">Housing help</li><li class="y">Phone to use</li>
-      <li class="n">No beds</li><li class="q">Meals — ask</li>
+      <li class="n">No beds</li><li class="y">Lunch &amp; dinner weekdays</li>
     </ul>
     <div class="cost">Free. Adults who are homeless.</div>
     <div class="actions">
@@ -183,9 +185,9 @@
   <div class="card" data-k="nightwatch">
     <div class="name">Operation Nightwatch</div>
     <div class="addr">302 14th Ave S</div>
-    <div class="hours"><b>Arrive 8pm.</b> Hot meal at 8pm, then they find you a downtown shelter bed.</div>
+    <div class="hours"><b>Check in by 7:45pm.</b> Dinner 8–9:15pm, then they find you a downtown shelter bed.</div>
     <ul class="fac">
-      <li class="y">Meal at 8pm</li><li class="y">Sends you to a bed</li>
+      <li class="y">Dinner 8pm</li><li class="y">Sends you to a bed</li>
       <li class="q">Housing help — ask</li><li class="n">No showers</li><li class="n">No laundry</li>
     </ul>
     <div class="cost">Free. Single men 18+. No ID requirement mentioned.</div>
@@ -259,21 +261,122 @@
   </section>
 
   <section class="panel" id="p-lib" role="tabpanel" aria-labelledby="t-lib" hidden>
+  <div class="card" data-k="lib_id">
+    <div class="name">International District / Chinatown Branch</div>
+    <div class="addr">713 8th Ave S</div>
+    <div class="hours"><b>Mon–Thu 10am–6pm · Sat–Sun 10am–6pm</b><br><b>Closed Fridays.</b></div>
+    <ul class="fac"><li class="y">Free wifi — no card needed</li><li class="y">Computers — with library card</li><li class="y">Warm, free seating</li></ul>
+    <div class="cost">Free. Wifi network: spl-public.</div>
+    <div class="actions"><a class="btn call" href="tel:+12063861300">Call</a></div>
+  </div>
   <div class="card" data-k="library">
     <div class="name">Seattle Central Library</div>
     <div class="addr">1000 4th Ave</div>
-    <div class="hours"><b>Mon 10–6 · Tue, Wed, Thu 10–8 · Fri, Sat, Sun 10–6</b></div>
-    <ul class="fac">
-      <li class="y">Warm, free seating</li><li class="y">Restrooms</li>
-      <li class="y">Computers — 2 hrs a day</li><li class="n">No showers</li><li class="n">No meals</li>
-    </ul>
-    <div class="cost">Free to sit. <b>Computers need a library card</b> — free to get, ask at the desk.</div>
+    <div class="hours"><b>Mon 10am–6pm · Tue–Thu 10am–8pm · Fri–Sun 10am–6pm</b></div>
+    <ul class="fac"><li class="y">Free wifi — no card needed</li><li class="y">Computers — with library card</li><li class="y">Restrooms</li><li class="y">Phone charging — Level 3</li><li class="y">Staff who help find services — Mon–Fri, Level 5</li></ul>
+    <div class="cost">Free. Wifi network: spl-public. A library card is free — staff can help if you have no address.</div>
     <div class="actions"><a class="btn call" href="tel:+12063864636">Call</a></div>
+  </div>
+  <div class="card" data-k="lib_dt">
+    <div class="name">Douglass-Truth Branch</div>
+    <div class="addr">2300 E Yesler Way — steep uphill walk</div>
+    <div class="hours"><b>Mon 10am–6pm · Tue 12–8pm · Wed 10am–6pm · Thu 12–8pm · Fri–Sun 10am–6pm</b></div>
+    <ul class="fac"><li class="y">Free wifi — no card needed</li><li class="y">Computers — with library card</li></ul>
+    <div class="cost">Free. Wifi network: spl-public.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066844704">Call</a></div>
+  </div>
+  <div class="card" data-k="lib_bh">
+    <div class="name">Beacon Hill Branch</div>
+    <div class="addr">2821 Beacon Ave S — one light rail stop from the station</div>
+    <div class="hours"><b>Mon–Tue 10am–6pm · Wed–Thu 12–8pm · Fri–Sun 10am–6pm</b></div>
+    <ul class="fac"><li class="y">Free wifi — no card needed</li><li class="y">Computers — with library card</li></ul>
+    <div class="cost">Free. Wifi network: spl-public.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066844711">Call</a></div>
+  </div>
+  <div class="card" data-k="lib_ch">
+    <div class="name">Capitol Hill Branch</div>
+    <div class="addr">425 Harvard Ave E — light rail to Capitol Hill station</div>
+    <div class="hours"><b>Mon–Tue 10am–6pm · Wed 12–8pm · Thu–Sun 10am–6pm</b></div>
+    <ul class="fac"><li class="y">Free wifi — no card needed</li><li class="y">Computers — with library card</li></ul>
+    <div class="cost">Free. Wifi network: spl-public.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066844715">Call</a></div>
   </div>
   </section>
 
   <section class="panel" id="p-wifi" role="tabpanel" aria-labelledby="t-wifi" hidden>
-<!--WIFI-->
+  <h2>Free — nothing to buy</h2>
+
+  <div class="card" data-k="cc_id">
+    <div class="name">Chinatown Community Center</div>
+    <div class="addr">719 8th Ave S — next to the library</div>
+    <div class="hours"><b>Mon, Wed, Fri 11am–9pm · Tue, Thu 9:30am–6pm · Sat 9am–5pm</b><br>Closed Sundays.</div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Open until 9pm, 3 nights</li><li class="q">Sitting in the lobby — ask</li></ul>
+    <div class="cost">Free. City-run.</div>
+    <div class="actions"><a class="btn call" href="tel:+12062330042">Call</a></div>
+  </div>
+  <div class="card" data-k="cityhall">
+    <div class="name">Seattle City Hall</div>
+    <div class="addr">600 4th Ave — public lobby</div>
+    <div class="hours"><b>Mon–Fri 7am–6pm</b><br>Closed weekends.</div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Public lobby</li></ul>
+    <div class="cost">Free. Security in the building.</div>
+  </div>
+
+  <h2>Cafés — buy something to sit</h2>
+
+  <div class="card" data-k="three03">
+    <div class="name">Café Three03</div>
+    <div class="addr">Inside the Amtrak station, 303 S Jackson St</div>
+    <div class="hours"><b>Mon–Fri 7am–6pm · Sat–Sun 8am–4pm</b></div>
+    <ul class="fac"><li class="q">Wifi — ask</li></ul>
+    <div class="cost">Buy something to sit inside.</div>
+  </div>
+  <div class="card" data-k="zeitgeist">
+    <div class="name">Zeitgeist Coffee</div>
+    <div class="addr">171 S Jackson St</div>
+    <div class="hours"><b>Mon–Sat 6am–6pm · Sun 8am–2pm</b></div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Restroom</li></ul>
+    <div class="cost">Buy something to sit inside.</div>
+    <div class="actions"><a class="btn call" href="tel:+12065830497">Call</a></div>
+  </div>
+  <div class="card" data-k="umbria">
+    <div class="name">Caffè Umbria</div>
+    <div class="addr">320 Occidental Ave S</div>
+    <div class="hours"><b>Mon–Fri 7am–5pm · Sat 7am–4pm · Sun 8am–4pm</b></div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Restroom</li></ul>
+    <div class="cost">Buy something to sit inside.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066245847">Call</a></div>
+  </div>
+  <div class="card" data-k="vita">
+    <div class="name">Caffe Vita</div>
+    <div class="addr">506 2nd Ave</div>
+    <div class="hours"><b>Mon–Fri 7am–5pm · Sat–Sun 8am–3pm</b></div>
+    <ul class="fac"><li class="y">Free wifi</li></ul>
+    <div class="cost">Buy something to sit inside.</div>
+  </div>
+  <div class="card" data-k="oasis">
+    <div class="name">Oasis Tea Zone</div>
+    <div class="addr">519 6th Ave S — bubble tea</div>
+    <div class="hours"><b>Every day 11am–midnight · Fri–Sat until 2am</b></div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Open late</li></ul>
+    <div class="cost">Buy something to sit inside.</div>
+  </div>
+  <div class="card" data-k="sbux">
+    <div class="name">Starbucks — Columbia Center</div>
+    <div class="addr">701 5th Ave — uphill</div>
+    <div class="hours"><b>Mon–Fri 5am–6pm</b><br><b>Closed weekends.</b></div>
+    <ul class="fac"><li class="y">Free wifi</li></ul>
+    <div class="cost">Starbucks requires a purchase to sit or use the restroom.</div>
+    <div class="actions"><a class="btn call" href="tel:+12064479934">Call</a></div>
+  </div>
+  <div class="card" data-k="sbux55">
+    <div class="name">Starbucks — Pier 55</div>
+    <div class="addr">1101 Alaskan Way — flat walk along the waterfront</div>
+    <div class="hours"><b>Every day 5am–9pm</b></div>
+    <ul class="fac"><li class="y">Free wifi</li><li class="y">Open 7 days, until 9pm</li></ul>
+    <div class="cost">Starbucks requires a purchase to sit or use the restroom.</div>
+    <div class="actions"><a class="btn call" href="tel:+12065547060">Call</a></div>
+  </div>
   </section>
 
   <footer>
@@ -287,18 +390,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
 const PLACES = {
-  compass:{n:"Compass Hygiene Center",lat:47.60067,lon:-122.33518,c:"wash",tel:"+12064741680",w:"Showers, laundry, housing help"},
-  urbanreststop:{n:"Urban Rest Stop",lat:47.61626,lon:-122.33524,c:"wash",tel:"+12063320110",w:"Showers and laundry"},
-  nightwatch:{n:"Operation Nightwatch",lat:47.59987,lon:-122.31389,c:"bed",tel:"+12063292099",w:"8pm meal, sends you to a bed"},
-  breadoflife:{n:"Bread of Life Mission",lat:47.59989,lon:-122.33458,c:"bed",tel:"+12066823579",w:"Beds, showers, laundry, meals"},
-  cathedral:{n:"Cathedral Kitchen",lat:47.60715,lon:-122.32588,c:"food",tel:"+12062642091",w:"Free meal, weekdays 4–4:45pm"},
-  solidground:{n:"Solid Ground",lat:47.66118,lon:-122.33890,c:"house",tel:"+12066946700",w:"Housing assessment, Weds 11–1"},
-  ccs:{n:"Catholic Community Services",lat:47.60119,lon:-122.30157,c:"house",tel:"+12063285707",w:"Housing list — appointment only"},
-  library:{n:"Seattle Central Library",lat:47.60671,lon:-122.33270,c:"svc",tel:"+12063864636",w:"Warm, computers, restrooms"},
-  miller:{n:"Miller Community Center",lat:47.62185,lon:-122.30692,c:"wash",w:"Free public showers"}
+  compass:{t:"help",n:"Compass Center",lat:47.60071,lon:-122.33582,c:"wash",tel:"+12064741680",w:"Showers, laundry, meals, housing help"},
+  urbanreststop:{t:"help",n:"Urban Rest Stop",lat:47.61626,lon:-122.33524,c:"wash",tel:"+12063320110",w:"Showers and laundry"},
+  nightwatch:{t:"help",n:"Operation Nightwatch",lat:47.59987,lon:-122.31389,c:"bed",tel:"+12063292099",w:"Check in 7:45pm, sends you to a bed"},
+  breadoflife:{t:"help",n:"Bread of Life Mission",lat:47.59989,lon:-122.33458,c:"bed",tel:"+12066823579",w:"Beds, showers, laundry, meals"},
+  cathedral:{t:"help",n:"Cathedral Kitchen",lat:47.60715,lon:-122.32588,c:"food",tel:"+12062642091",w:"Free meal, weekdays 4–4:45pm"},
+  solidground:{t:"help",n:"Solid Ground",lat:47.66118,lon:-122.33890,c:"house",tel:"+12066946700",w:"Housing assessment, Weds 11–1"},
+  ccs:{t:"help",n:"Catholic Community Services",lat:47.60119,lon:-122.30157,c:"house",tel:"+12063285707",w:"Housing list — appointment only"},
+  miller:{t:"help",n:"Miller Community Center",lat:47.62185,lon:-122.30692,c:"wash",w:"Free public showers"},
+
+  lib_id:{t:"lib",n:"Chinatown Library",lat:47.59616,lon:-122.32267,c:"lib",tel:"+12063861300",w:"Free wifi — closed Fridays"},
+  library:{t:"lib",n:"Central Library",lat:47.60671,lon:-122.33270,c:"lib",tel:"+12063864636",w:"Free wifi, open 7 days, until 8pm Tue–Thu"},
+  lib_dt:{t:"lib",n:"Douglass-Truth Library",lat:47.60193,lon:-122.30167,c:"lib",tel:"+12066844704",w:"Free wifi"},
+  lib_bh:{t:"lib",n:"Beacon Hill Library",lat:47.57800,lon:-122.31143,c:"lib",tel:"+12066844711",w:"Free wifi"},
+  lib_ch:{t:"lib",n:"Capitol Hill Library",lat:47.62292,lon:-122.32233,c:"lib",tel:"+12066844715",w:"Free wifi"},
+
+  cc_id:{t:"wifi",n:"Chinatown Community Center",lat:47.59625,lon:-122.32282,c:"wifi",tel:"+12062330042",w:"Free wifi, until 9pm Mon/Wed/Fri"},
+  cityhall:{t:"wifi",n:"Seattle City Hall",lat:47.60389,lon:-122.33010,c:"wifi",w:"Free wifi, weekdays 7am–6pm"},
+  three03:{t:"wifi",n:"Café Three03",lat:47.59823,lon:-122.33008,c:"cafe",w:"Inside the Amtrak station"},
+  zeitgeist:{t:"wifi",n:"Zeitgeist Coffee",lat:47.59909,lon:-122.33186,c:"cafe",tel:"+12065830497",w:"Free wifi, open 7 days"},
+  umbria:{t:"wifi",n:"Caffè Umbria",lat:47.59939,lon:-122.33269,c:"cafe",tel:"+12066245847",w:"Free wifi, open 7 days"},
+  vita:{t:"wifi",n:"Caffe Vita",lat:47.60184,lon:-122.33185,c:"cafe",w:"Free wifi"},
+  oasis:{t:"wifi",n:"Oasis Tea Zone",lat:47.59767,lon:-122.32656,c:"cafe",w:"Free wifi, open until midnight"},
+  sbux:{t:"wifi",n:"Starbucks — Columbia Center",lat:47.60414,lon:-122.33082,c:"cafe",tel:"+12064479934",w:"Free wifi, weekdays 5am–6pm"},
+  sbux55:{t:"wifi",n:"Starbucks — Pier 55",lat:47.60479,lon:-122.34001,c:"cafe",tel:"+12065547060",w:"Free wifi, every day 5am–9pm"}
 };
 const STATION={n:"Amtrak Station",lat:47.59845,lon:-122.32990,w:"Where you arrived — Amtrak"};
-const COLORS={bed:"--bed",wash:"--wash",food:"--food",svc:"--svc",house:"--house"};
+const COLORS={bed:"--bed",wash:"--wash",food:"--food",house:"--house",lib:"--lib",wifi:"--wifi",cafe:"--cafe"};
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const walkUrl=(lat,lon)=>`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
 
@@ -316,38 +434,49 @@ Object.entries(PLACES).forEach(([k,p])=>{
 });
 
 // ── Map ──
-const map=L.map('map',{scrollWheelZoom:false}).setView([47.6020,-122.3285],13);
+const map=L.map('map',{scrollWheelZoom:false}).setView([47.6024,-122.3201],13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
   maxZoom:19, attribution:'&copy; OpenStreetMap'}).addTo(map);
 
-const markers={};
+// Pins that share a corner hide each other. Each nudge is under a block, so the pin
+// still points at the right spot; walking links use the true coordinates.
+const NUDGE={compass:[0.00045,0], breadoflife:[-0.00045,0], three03:[-0.0006,-0.0004],
+  cityhall:[-0.0005,0], sbux:[0.0005,0], zeitgeist:[-0.00045,0], umbria:[0.00045,0]};
 
-// Compass and Bread of Life share a corner, so one pin hid the other. ~100m nudge,
-// smaller than the block; walking links still use the true coordinates.
-const NUDGE={compass:[0.00045,0], breadoflife:[-0.00045,0]};
-
+// One layer of pins per tab, so each tab's map only shows what that tab lists.
+const layers={help:L.layerGroup(),lib:L.layerGroup(),wifi:L.layerGroup()};
 Object.entries(PLACES).forEach(([k,p])=>{
   const off=NUDGE[k]||[0,0];
   const m=L.circleMarker([p.lat+off[0],p.lon+off[1]],{
     radius:9, color:'#fff', weight:2, fillColor:cssVar(COLORS[p.c]), fillOpacity:1
-  }).addTo(map);
+  }).addTo(layers[p.t]);
   const tel=p.tel?`<a class="c" href="tel:${p.tel}">Call</a>`:'';
   m.bindPopup(`<b>${p.n}</b><br>${p.w}<div class="pop-links">${tel}
     <a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">Walk there</a></div>`);
-  m.on('click',()=>{ const c=document.querySelector(`.card[data-k="${k}"]`); if(c) markers[k]=c; });
 });
 
-// King Street Station — not a service, a landmark to get your bearings from.
-L.marker([STATION.lat,STATION.lon],{
+// Amtrak Station — not a service, a landmark to get your bearings from. Shown on every tab.
+L.marker([STATION.lat,STATION.lon],{zIndexOffset:1000,
   icon:L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
     html:'<div style="width:26px;height:26px;border-radius:50%;background:#111;'+
          'border:3px solid #fff;box-shadow:0 0 0 1px #111;display:flex;'+
          'align-items:center;justify-content:center;color:#fff;font-size:14px">&#9733;</div>'})
 }).addTo(map).bindPopup('<b>Amtrak Station</b><br>Where you arrived (King Street Station).');
-// Fitting every pin forces the zoom so far out that the downtown ones become an
-// untappable clump. Frame the dense core instead; the two distant places carry their
-// walking time on the card, and the button below sorts everything by distance.
-map.setView([47.6024,-122.3201],13);
+
+let activeTab='help';
+function showTabOnMap(tab){
+  Object.entries(layers).forEach(([t,g])=>{ if(t===tab) g.addTo(map); else map.removeLayer(g); });
+  document.querySelectorAll('.legend span[data-tab]').forEach(el=>el.hidden=(el.dataset.tab!==tab));
+  if(tab==='help'){
+    // Fitting every Help pin zooms out so far the downtown ones clump; frame the core instead.
+    map.setView([47.6024,-122.3201],13);
+  }else{
+    const pts=Object.values(PLACES).filter(p=>p.t===tab).map(p=>[p.lat,p.lon]);
+    pts.push([STATION.lat,STATION.lon]);
+    map.fitBounds(pts,{padding:[28,28],maxZoom:16});
+  }
+}
+showTabOnMap('help');
 
 // On a phone, one finger scrolls the page; two fingers move the map.
 if(L.Browser.mobile){
@@ -362,6 +491,9 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click',()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
     document.querySelectorAll('.panel').forEach(p=>p.hidden=(p.id!==b.getAttribute('aria-controls')));
+    activeTab={'p-help':'help','p-lib':'lib','p-wifi':'wifi'}[b.getAttribute('aria-controls')];
+    showTabOnMap(activeTab);
+    renderNear();
     window.scrollTo({top:0,behavior:'instant'});
   });
 });
@@ -372,18 +504,33 @@ function miles(a,b,c,d){const R=3958.8,t=Math.PI/180;
   const x=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;
   return 2*R*Math.asin(Math.sqrt(x));}
 function walkMins(mi){return Math.round(mi/3*60);} // ~3 mph on foot
+// Streets don't run in straight lines; real walking routes average ~30% longer.
+const ROUTE=1.3;
 
-// Straight-line distance understates a real walk through a street grid, so round up a little.
 function setDist(k,mi,from){
   const card=document.querySelector(`.card[data-k="${k}"]`);
   if(!card) return;
   let d=card.querySelector('.dist');
   if(!d){ d=document.createElement('div'); d.className='dist'; card.querySelector('.addr').after(d); }
-  d.textContent=`${mi.toFixed(1)} mi from ${from} — about ${walkMins(mi)} min walk`;
+  const r=mi*ROUTE;
+  d.textContent=`${r.toFixed(1)} mi from ${from} — about ${walkMins(r)} min walk`;
 }
 // Default: distance from the station, so the page is useful without sharing location.
 Object.entries(PLACES).forEach(([k,p])=>
   setDist(k,miles(STATION.lat,STATION.lon,p.lat,p.lon),'the station'));
+
+let here=null;
+function renderNear(){
+  if(!here) return;
+  const sorted=Object.entries(PLACES).filter(([,p])=>p.t===activeTab)
+    .map(([k,p])=>({k,p,mi:miles(here[0],here[1],p.lat,p.lon)*ROUTE}))
+    .sort((a,b)=>a.mi-b.mi);
+  list.innerHTML='<p class="key" style="margin-bottom:8px">Closest to you right now:</p>'+
+    sorted.slice(0,5).map(({p,mi})=>
+      `<a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">
+         <span><span class="t">${p.n}</span><span class="s">${p.w}</span></span>
+         <span class="d">${mi.toFixed(1)} mi<br>${walkMins(mi)} min</span></a>`).join('');
+}
 
 btn.addEventListener('click',()=>{
   if(!navigator.geolocation){list.innerHTML='<p class="key">This phone will not share its location. Use the map above instead.</p>';return;}
@@ -392,15 +539,9 @@ btn.addEventListener('click',()=>{
     const{latitude:la,longitude:lo}=pos.coords;
     L.circleMarker([la,lo],{radius:8,color:'#fff',weight:3,fillColor:'#e11d48',fillOpacity:1})
       .addTo(map).bindPopup('<b>You are here</b>');
-    const sorted=Object.entries(PLACES)
-      .map(([k,p])=>({k,p,mi:miles(la,lo,p.lat,p.lon)}))
-      .sort((a,b)=>a.mi-b.mi);
-    sorted.forEach(({k,mi})=>setDist(k,mi,'you'));
-    list.innerHTML='<p class="key" style="margin-bottom:8px">Closest to you right now:</p>'+
-      sorted.slice(0,5).map(({k,p,mi})=>
-        `<a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">
-           <span><span class="t">${p.n}</span><span class="s">${p.w}</span></span>
-           <span class="d">${mi.toFixed(1)} mi<br>${walkMins(mi)} min</span></a>`).join('');
+    here=[la,lo];
+    Object.entries(PLACES).forEach(([k,p])=>setDist(k,miles(la,lo,p.lat,p.lon),'you'));
+    renderNear();
     map.setView([la,lo],14);
     btn.textContent='Distances added below ✓';
   },err=>{
