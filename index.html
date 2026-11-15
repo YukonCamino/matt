@@ -72,8 +72,12 @@
     padding:12px 14px;margin:16px 0;font-size:15px}
   .key{font-size:13.5px;margin-top:6px;display:block}
 
-  h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
-    margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  /* Section headings: a band in the same colour as that section's map pins */
+  h2{--c:var(--accent);display:flex;align-items:center;gap:10px;
+    font-size:20px;font-weight:800;line-height:1.25;color:var(--fg);
+    margin:36px 0 12px;padding:13px 14px;border-radius:10px;
+    background:var(--card);background:color-mix(in srgb,var(--c) 14%,var(--bg));
+    border-left:6px solid var(--c)}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:14px 15px;margin-bottom:12px}
@@ -148,7 +152,7 @@
 
   <section class="panel" id="p-help" role="tabpanel" aria-labelledby="t-help">
 
-  <h2>Showers, laundry, help — best first stop</h2>
+  <h2 style="--c:var(--wash)">Showers, Laundry, Housing Placement</h2>
 
   <div class="card top" data-k="compass">
     <div class="name">Compass Hygiene Center &amp; Day Center</div>
@@ -183,7 +187,7 @@
     
   </div>
 
-  <h2>A place to sleep</h2>
+  <h2 style="--c:var(--bed)">A place to sleep</h2>
 
   <div class="card" data-k="nightwatch">
     <div class="name">Operation Nightwatch</div>
@@ -212,7 +216,7 @@
     
   </div>
 
-  <h2>Food</h2>
+  <h2 style="--c:var(--food)">Food</h2>
 
   <div class="card" data-k="cathedral">
     <div class="name">Cathedral Kitchen</div>
@@ -224,7 +228,7 @@
     
   </div>
 
-  <h2>Getting into housing</h2>
+  <h2 style="--c:var(--house)">Getting into housing</h2>
 
   <div class="card" data-k="solidground">
     <div class="name">Solid Ground — North Seattle</div>
@@ -251,7 +255,7 @@
     
   </div>
 
-  <h2>Free public showers</h2>
+  <h2 style="--c:var(--wash)">Free public showers</h2>
 
   <div class="card" data-k="miller">
     <div class="name">Miller Community Center — public showers</div>
@@ -307,7 +311,7 @@
   </section>
 
   <section class="panel" id="p-wifi" role="tabpanel" aria-labelledby="t-wifi" hidden>
-  <h2>Free — nothing to buy</h2>
+  <h2 style="--c:var(--wifi)">Free — nothing to buy</h2>
 
   <div class="card" data-k="cc_id">
     <div class="name">Chinatown Community Center</div>
@@ -325,7 +329,7 @@
     <div class="cost">Free. Security in the building.</div>
   </div>
 
-  <h2>Cafés — buy something to sit</h2>
+  <h2 style="--c:var(--cafe)">Cafés — buy something to sit</h2>
 
   <div class="card" data-k="three03">
     <div class="name">Café Three03</div>
