@@ -8,69 +8,65 @@
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
-    --bg:#fff; --fg:#111; --muted:#5a5a5a; --line:#d8d8d8;
-    --card:#fff; --accent:#0b5fff; --warn-bg:#fff4e0; --warn-fg:#6b4300;
-    --urgent-bg:#ffe9e9; --urgent-fg:#8a1414;
+    --bg:#fff;--fg:#111;--muted:#5a5a5a;--line:#dcdcdc;--card:#fff;
+    --accent:#0b5fff;--yes:#14703a;--no:#8a8a8a;--maybe:#8a5a00;
+    --warn-bg:#fff3dd;--warn-fg:#6b4300;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
   }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --bg:#121212; --fg:#f2f2f2; --muted:#a8a8a8; --line:#333;
-      --card:#1c1c1c; --accent:#7fb0ff; --warn-bg:#3a2d12; --warn-fg:#ffd79a;
-      --urgent-bg:#3a1414; --urgent-fg:#ffb3b3;
-    }
-  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#111;--fg:#f2f2f2;--muted:#a9a9a9;--line:#333;--card:#1b1b1b;
+    --accent:#7fb0ff;--yes:#5fcf8e;--no:#777;--maybe:#e8b45f;
+    --warn-bg:#3a2d12;--warn-fg:#ffd79a;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
+  }}
   html{-webkit-text-size-adjust:100%}
-  body{
-    background:var(--bg); color:var(--fg);
-    font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    padding:0 0 48px;
-  }
-  .wrap{max-width:620px;margin:0 auto;padding:0 16px}
-  header{padding:24px 0 8px}
-  h1{font-size:25px;line-height:1.2;letter-spacing:-.01em}
+  body{background:var(--bg);color:var(--fg);padding-bottom:48px;
+    font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:640px;margin:0 auto;padding:0 15px}
+  header{padding:22px 0 4px}
+  h1{font-size:25px;line-height:1.2}
   .sub{color:var(--muted);font-size:15px;margin-top:6px}
 
-  .crisis{
-    display:block;background:var(--urgent-bg);color:var(--urgent-fg);
-    border:1px solid currentColor;border-radius:12px;
-    padding:14px 16px;margin:18px 0 6px;text-decoration:none;font-weight:700;
-  }
+  .crisis{display:block;background:var(--urgent-bg);color:var(--urgent-fg);
+    border:1px solid currentColor;border-radius:12px;padding:13px 15px;
+    margin:16px 0 8px;text-decoration:none;font-weight:700;font-size:17px}
   .crisis span{display:block;font-weight:400;font-size:14px;margin-top:3px;opacity:.9}
 
-  h2{
-    font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
-    margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line);
-  }
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:15px 16px;margin-bottom:12px;
-  }
+  .callfirst{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;
+    padding:12px 14px;margin:16px 0;font-size:15px}
+
+  h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+    margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 15px;margin-bottom:12px}
+  .card.flag{border-color:var(--maybe);border-width:2px}
   .name{font-weight:700;font-size:18px;line-height:1.3}
-  .detail{color:var(--muted);font-size:15px;margin-top:5px}
-  .detail b{color:var(--fg);font-weight:600}
+  .addr{color:var(--muted);font-size:15px;margin-top:3px}
+  .hours{margin-top:8px;font-size:15.5px}
+  .hours b{font-weight:700}
+
+  ul.fac{list-style:none;margin:11px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+  ul.fac li{font-size:14px;line-height:1.3;padding:5px 9px;border-radius:7px;
+    border:1px solid var(--line);white-space:nowrap}
+  li.y{color:var(--yes);border-color:currentColor}
+  li.n{color:var(--no)}
+  li.q{color:var(--maybe);border-color:currentColor}
+  .cost{margin-top:10px;font-size:15px;font-weight:600}
 
   .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
-  .btn{
-    flex:1 1 auto;min-width:120px;min-height:46px;
-    display:flex;align-items:center;justify-content:center;gap:7px;
-    border:1px solid var(--accent);border-radius:9px;
-    color:var(--accent);text-decoration:none;font-weight:600;font-size:16px;
-    padding:10px 14px;
-  }
+  .btn{flex:1 1 auto;min-width:118px;min-height:46px;display:flex;align-items:center;
+    justify-content:center;border:1px solid var(--accent);border-radius:9px;
+    color:var(--accent);text-decoration:none;font-weight:600;font-size:16px;padding:10px 14px}
   .btn.call{background:var(--accent);color:#fff}
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]) .btn.call{color:#0b1220}
-  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.call{color:#0b1220}}
 
-  .note{
-    background:var(--warn-bg);color:var(--warn-fg);
-    border-radius:9px;padding:10px 12px;margin-top:11px;font-size:14.5px;
-  }
+  .note{background:var(--warn-bg);color:var(--warn-fg);border-radius:9px;
+    padding:10px 12px;margin-top:11px;font-size:14.5px}
   .note b{font-weight:700}
 
-  footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  footer{margin-top:34px;padding-top:15px;border-top:1px solid var(--line);
     color:var(--muted);font-size:14px}
   footer p{margin-bottom:9px}
+  .key{font-size:13.5px;color:var(--muted);margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -78,131 +74,287 @@
 
   <header>
     <h1>Seattle Resources</h1>
-    <p class="sub">Shelter, housing, showers and crisis help. Closest options to King Street Station and Pioneer Square.</p>
+    <p class="sub">Near King Street Station and Pioneer Square.</p>
   </header>
 
   <a class="crisis" href="tel:988">Crisis help — call or text 988
-    <span>Free, 24 hours, any day. Someone will pick up.</span></a>
+    <span>Free, 24 hours, any day.</span></a>
   <a class="crisis" href="tel:+12064613222">King County Crisis Line — 206-461-3222
-    <span>24 hours. Can send a team to you in person.</span></a>
+    <span>24 hours. Can send someone to you in person.</span></a>
 
-  <h2>A place to sleep tonight</h2>
+  <div class="callfirst"><b>Call before you walk anywhere.</b> Hours and rules change often, and some
+    of what is below could not be confirmed. A phone call saves an hour of walking.
+    <span class="key">On each place: <b style="color:var(--yes)">green = confirmed</b> ·
+      <b style="color:var(--maybe)">orange = could not confirm, ask on the phone</b> ·
+      grey = not offered</span></div>
 
-  <div class="card">
-    <div class="name">Operation Nightwatch</div>
-    <div class="detail">302 14th Ave S<br>
-      Open <b>8pm to 9am, every night</b>. Walk in. They find you a downtown shelter bed.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063292099">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=302+14th+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
-    <div class="note"><b>Best first stop at night.</b> If it is late and nothing else is open, start here.</div>
-  </div>
+  <h2>Showers, laundry, help — best first stop</h2>
 
   <div class="card">
-    <div class="name">Union Gospel Mission — Men's Shelter</div>
-    <div class="detail">318 2nd Ave Ext S<br>
-      Low barrier. Bed, case worker, basic needs. Longer stays up to 30 days. Christian organization.</div>
+    <div class="name">Compass Hygiene Center &amp; Day Center</div>
+    <div class="addr">77 S Washington St — a few minutes from King Street Station</div>
+    <div class="hours">Showers &amp; laundry: <b>Mon–Fri 7am–4pm, Sat 8am–12pm</b><br>
+      Day center: <b>Mon–Fri 9am–4pm</b></div>
+    <ul class="fac">
+      <li class="y">Showers</li><li class="y">Laundry</li>
+      <li class="y">Housing help</li><li class="y">Phone to use</li>
+      <li class="n">No beds</li><li class="q">Meals — ask</li>
+    </ul>
+    <div class="cost">Free. Adults who are homeless.</div>
     <div class="actions">
-      <a class="btn call" href="tel:+12065014357">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=318+2nd+Ave+Ext+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+      <a class="btn call" href="tel:+12064741680">Call hygiene</a>
+      <a class="btn" href="tel:+12064741630">Call day center</a>
+      <a class="btn" href="https://maps.google.com/?q=77+S+Washington+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
+    <div class="note"><b>If you only go one place, make it this one.</b> Showers, laundry and someone
+      who can start housing paperwork, all in one building, close to where you are.</div>
   </div>
-
-  <div class="card">
-    <div class="name">Bread of Life Mission</div>
-    <div class="detail">97 S Main St<br>
-      For single men. Open 24 hours.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12066823579">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=97+S+Main+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
-    <div class="note"><b>Call before going.</b> One source says $5 and a photo ID are required any time.
-      Another says come 9:30–11am Tuesday to Friday with no ID needed. We could not confirm which is right.</div>
-  </div>
-
-  <div class="card">
-    <div class="name">Salvation Army — William Booth Center</div>
-    <div class="detail">811 Maynard Ave S<br>
-      Short-term housing programs for men. <b>Clean and sober only.</b></div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12064428393">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=811+Maynard+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
-  </div>
-
-  <h2>Showers, laundry, ID</h2>
 
   <div class="card">
     <div class="name">Urban Rest Stop — Downtown</div>
-    <div class="detail">1924 9th Ave<br>
-      Free showers, laundry and restrooms. Soap provided. No appointment.</div>
+    <div class="addr">1924 9th Ave</div>
+    <div class="hours"><b>Arrive a weekday morning, around 8am.</b> That time works under every
+      schedule we found. Closed 12–1pm.</div>
+    <ul class="fac">
+      <li class="y">Showers — 1 a day</li><li class="y">Laundry — 1 load every 2 days</li>
+      <li class="y">Restrooms</li><li class="n">No beds</li><li class="n">No meals</li>
+    </ul>
+    <div class="cost">Free. Soap and towels provided.</div>
     <div class="actions">
       <a class="btn call" href="tel:+12063320110">Call</a>
       <a class="btn" href="https://maps.google.com/?q=1924+9th+Ave+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
-    <div class="note">Weekend hours differ depending on where you look — call first on a Saturday or Sunday.</div>
+    <div class="note">Four different schedules are posted in different places, and weekend hours are
+      the least reliable. <b>Shower sign-up has to be done in person.</b> Laundry takes about 2 hours.</div>
+  </div>
+
+  <h2>A place to sleep</h2>
+
+  <div class="card">
+    <div class="name">Operation Nightwatch</div>
+    <div class="addr">302 14th Ave S</div>
+    <div class="hours"><b>Arrive 8pm.</b> Hot meal at 8pm, then they find you a downtown shelter bed.</div>
+    <ul class="fac">
+      <li class="y">Meal at 8pm</li><li class="y">Sends you to a bed</li>
+      <li class="q">Housing help — ask</li><li class="n">No showers</li><li class="n">No laundry</li>
+    </ul>
+    <div class="cost">Free. Single men 18+. No ID requirement mentioned.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12063292099">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=302+14th+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note"><b>Best option late at night.</b> They do not keep many beds here — what they do
+      is get you into one somewhere downtown. Sources disagree on closing time, so do not arrive late.</div>
   </div>
 
   <div class="card">
+    <div class="name">Bread of Life Mission</div>
+    <div class="addr">97 S Main St — close to King Street Station</div>
+    <div class="hours">Shelter open <b>24 hours</b>. To get a bed, <b>sign up 5:30–6:15pm</b>.
+      Office Mon–Fri 9:30am–2pm.</div>
+    <ul class="fac">
+      <li class="y">Beds — men 18+</li><li class="y">Showers</li>
+      <li class="y">Laundry</li><li class="y">Meals</li><li class="q">Housing help — ask</li>
+    </ul>
+    <div class="cost">Bring <b>$5 and photo ID</b> if you can — see below. Sleeping area is up 3 flights of stairs.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12066823579">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=97+S+Main+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note">The newest guide says <b>$5 and valid ID required</b>. County listings say there is
+      no fee. Bring both if you have them. Guests are asked to commit to staying sober.
+      Storage also available: $20/month plus a $15 key deposit you get back.</div>
+  </div>
+
+  <div class="card flag">
+    <div class="name">Union Gospel Mission — Men's Shelter</div>
+    <div class="addr">318 2nd Ave Ext S</div>
+    <div class="hours">Listed as <b>intake Mon–Fri 8am–5pm</b>, but we could not confirm this.</div>
+    <ul class="fac">
+      <li class="y">Beds — up to 30 nights</li><li class="y">Meals — 3 a day, open to anyone</li>
+      <li class="q">Showers — likely</li><li class="q">Laundry — ask</li><li class="q">Housing help — ask</li>
+    </ul>
+    <div class="cost">No fee found. You do not have to be sober, but they ask that you want to get there.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12065014357">Call first</a>
+      <a class="btn" href="https://maps.google.com/?q=318+2nd+Ave+Ext+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note"><b>Call before going.</b> This shelter is missing from the county's current
+      shelter list and has no hours posted on its own site. It may well be open — we just could not
+      confirm it. You can go just for a meal without staying.</div>
+  </div>
+
+  <div class="card flag">
+    <div class="name">Salvation Army — William Booth Center</div>
+    <div class="addr">811 Maynard Ave S</div>
+    <div class="hours">One listing says overnight <b>7pm–7am</b>. Not confirmed.</div>
+    <ul class="fac">
+      <li class="y">Beds — bunks, some single rooms</li><li class="y">Housing help</li>
+      <li class="q">Showers — ask</li><li class="q">Laundry — ask</li><li class="q">Meals — ask</li>
+    </ul>
+    <div class="cost">Cost and ID rules not stated anywhere. Ask on the phone.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12066210145">Call first</a>
+      <a class="btn" href="https://maps.google.com/?q=811+Maynard+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note"><b>Call before going.</b> Like UGM, this one is missing from the county's current
+      shelter list and posts no hours. Caseworkers here do help people into longer-term housing,
+      which is worth asking about.</div>
+  </div>
+
+  <div class="card">
+    <div class="name">St. Martin de Porres Shelter</div>
+    <div class="addr">1561 Alaskan Way S</div>
+    <div class="hours">Open <b>24 hours daily</b>.</div>
+    <ul class="fac"><li class="y">Beds</li><li class="q">Other services — ask</li></ul>
+    <div class="cost"><b>Men aged 50 and over only.</b></div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12063236341">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=1561+Alaskan+Way+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+  </div>
+
+  <h2>Food</h2>
+
+  <div class="card">
+    <div class="name">Cathedral Kitchen</div>
+    <div class="addr">910 Columbia St</div>
+    <div class="hours"><b>Mon–Fri 4:00–4:45pm</b> and <b>Sunday 7–8am</b></div>
+    <ul class="fac"><li class="y">Free meal</li><li class="y">Anyone in need</li></ul>
+    <div class="cost">Free. No ID, no sign-up.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12062642091">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=910+Columbia+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note">The most dependable free meal near everything else on this page. The window is
+      short — be there by 4pm on a weekday.</div>
+  </div>
+
+  <h2>Replacing your ID, phone calls, mail</h2>
+
+  <div class="card">
     <div class="name">Solanus Casey Center</div>
-    <div class="detail">804 9th Ave<br>
-      Helps you replace a <b>Washington State ID or driver's license</b>. Useful if a shelter asks for ID.</div>
+    <div class="addr">804 9th Ave, at St. James Cathedral</div>
+    <div class="hours"><b>Mon–Thu, arrive between 1pm and 3pm.</b> Closed Fri, Sat, Sun.</div>
+    <ul class="fac">
+      <li class="y">WA ID &amp; licence help</li><li class="y">Birth certificates</li>
+      <li class="y">Phones for local calls</li><li class="y">Computers</li>
+      <li class="y">Socks, toiletries, ponchos</li>
+      <li class="n">No showers</li><li class="n">No beds</li><li class="n">No meals</li>
+    </ul>
+    <div class="cost">Free. Coffee, tea and snacks only — not a meal site.</div>
     <div class="actions">
       <a class="btn call" href="tel:+12062230907">Call</a>
       <a class="btn" href="https://maps.google.com/?q=804+9th+Ave+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
+    <div class="note"><b>Go here to replace an ID.</b> Several shelters want one. They also note that
+      money is tight and they cannot promise every request. Bus passes are given out by lottery on
+      the last Wednesday of the month.</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Seattle Indian Center</div>
+    <div class="addr">1265 S Main St, Suite 105</div>
+    <div class="hours"><b>Mon–Fri 9:30am–5:30pm</b></div>
+    <ul class="fac">
+      <li class="y">Showers</li><li class="y">Laundry</li>
+      <li class="y">Mailing address</li><li class="n">No beds</li>
+    </ul>
+    <div class="cost">Free, open to everyone. A current state ID is needed to use the mail service.</div>
+    <div class="actions">
+      <a class="btn call" href="tel:+12063298700">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=1265+S+Main+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
+    </div>
+    <div class="note">A fixed mailing address is worth setting up early — benefits, court letters and
+      job replies all need somewhere to go.</div>
   </div>
 
   <h2>Getting into housing</h2>
 
   <div class="card">
-    <div class="name">Catholic Community Services</div>
-    <div class="detail">100 23rd Ave S<br>
-      Monday to Friday, 9am–5pm. <b>Appointment only — call first.</b> This is a way into King County's
-      housing list (Coordinated Entry).</div>
+    <div class="name">Solid Ground — North Seattle</div>
+    <div class="addr">1501 N 45th St (Wallingford)</div>
+    <div class="hours">Walk in for a housing assessment <b>Wednesday 11am–1pm</b>, first come first
+      served. Office hours differ by source — call.</div>
+    <ul class="fac">
+      <li class="y">Housing assessment</li><li class="y">Tenant &amp; eviction help</li>
+      <li class="n">No beds here</li><li class="n">No showers</li><li class="n">No laundry</li>
+    </ul>
+    <div class="cost">Free. This is North Seattle's official way onto the county housing list.</div>
     <div class="actions">
-      <a class="btn call" href="tel:+12063285900">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=100+23rd+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
+      <a class="btn call" href="tel:+12066946700">Call</a>
+      <a class="btn" href="https://maps.google.com/?q=1501+N+45th+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
+    <div class="note">There is a food pantry in the same building run by FamilyWorks:
+      <b>Tue 12–2pm, Thu 3–6pm, Fri 11am–1pm</b>. Worth timing your visit around it.</div>
   </div>
 
   <div class="card">
-    <div class="name">Solid Ground — North Seattle</div>
-    <div class="detail">Walk-in hours <b>Wednesdays, 11am–1pm</b>. No appointment needed during that window.</div>
+    <div class="name">Catholic Community Services</div>
+    <div class="addr">100 23rd Ave S</div>
+    <div class="hours"><b>Appointment only, Mon–Fri 9am–5pm. Do not walk in.</b></div>
+    <ul class="fac"><li class="y">Housing list access</li><li class="n">No beds</li>
+      <li class="n">No showers</li><li class="n">No meals</li></ul>
+    <div class="cost">Free. Phone first and book a time.</div>
     <div class="actions">
-      <a class="btn call" href="tel:+12066946833">Call</a>
+      <a class="btn call" href="tel:+12063285707">Call</a>
     </div>
+    <div class="note">Mostly offices, and walk-ins usually cannot be seen. If you want Catholic
+      Community Services in person, <b>go to the Solanus Casey Center above instead</b>.</div>
   </div>
 
   <div class="card">
     <div class="name">Safe parking — Urban League</div>
-    <div class="detail">If you have a vehicle to sleep in. Lots open 7 days a week.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12064613792">Call</a>
-    </div>
+    <div class="addr">If you have a vehicle to sleep in</div>
+    <div class="hours">Lots open <b>7 days a week</b></div>
+    <ul class="fac"><li class="y">Legal place to park overnight</li></ul>
+    <div class="cost">Free.</div>
+    <div class="actions"><a class="btn call" href="tel:+12064613792">Call</a></div>
   </div>
 
-  <div class="note" style="margin-top:14px">
-    Housing through Coordinated Entry takes time, and there are not enough places in King County for
-    everyone waiting. Getting on the list early still matters — but keep using shelters meanwhile.
-  </div>
+  <div class="note" style="margin-top:14px">There is not enough housing in King County for everyone on
+    the list, and the wait is long. Getting assessed early still matters — but keep using shelters
+    while you wait.</div>
 
-  <h2>Also worth knowing</h2>
+  <h2>Somewhere warm and dry</h2>
+
   <div class="card">
     <div class="name">Seattle Central Library</div>
-    <div class="detail">1000 4th Ave<br>
-      Free computers and internet. Somewhere warm to sit. Use it for email if you have no phone.</div>
+    <div class="addr">1000 4th Ave</div>
+    <div class="hours"><b>Mon 10–6 · Tue, Wed, Thu 10–8 · Fri, Sat, Sun 10–6</b></div>
+    <ul class="fac">
+      <li class="y">Warm, free seating</li><li class="y">Restrooms</li>
+      <li class="y">Computers — 2 hrs a day</li><li class="n">No showers</li><li class="n">No meals</li>
+    </ul>
+    <div class="cost">Free to sit. <b>Computers need a library card</b> — free to get, ask at the desk.</div>
     <div class="actions">
       <a class="btn" href="https://maps.google.com/?q=Seattle+Central+Library+1000+4th+Ave" target="_blank" rel="noopener">Map</a>
+      <a class="btn call" href="tel:+12063864636">Call</a>
+    </div>
+    <div class="note">These hours are confirmed and reliable. <b>Closed Nov 26, Dec 24, Dec 25 and
+      Jan 1.</b> Use the computers for email if you have no phone.</div>
+  </div>
+
+  <div class="card">
+    <div class="name">Miller Community Center — public showers</div>
+    <div class="addr">330 19th Ave E</div>
+    <div class="hours"><b>Mon–Fri 10am–5:30pm</b>, last shower 5pm</div>
+    <ul class="fac"><li class="y">Free showers</li></ul>
+    <div class="cost">Free, run by Seattle Parks.</div>
+    <div class="actions">
+      <a class="btn" href="https://maps.google.com/?q=330+19th+Ave+E+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
   </div>
 
   <footer>
-    <p><b>Hours and rules change often.</b> Always call before travelling across town — a wasted trip
-      on foot is expensive.</p>
-    <p>Put together from Crisis Connections' King County shelter list, the City of Seattle CID resource
-      guide, and the King County Regional Homelessness Authority.</p>
+    <p><b>About job help:</b> none of these places advertise job placement, so we have not listed it
+      anywhere. The day centres — Compass especially — are the right people to ask, and they will know
+      who in Seattle does it.</p>
+    <p><b>About ID:</b> carry it if you have it. Only Bread of Life clearly asks for one, but it comes
+      up often. The Solanus Casey Center replaces lost Washington ID.</p>
+    <p>Put together from the King County Crisis Connections shelter, food and services guides, the City
+      of Seattle resource guide, and each organisation's own website. The county guides are a few months
+      old, which is why calling first matters.</p>
   </footer>
 
 </div>
