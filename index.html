@@ -5,17 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Seattle Resources</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
     --bg:#fff;--fg:#111;--muted:#5a5a5a;--line:#dcdcdc;--card:#fff;
     --accent:#0b5fff;--yes:#14703a;--no:#8a8a8a;--maybe:#8a5a00;
     --warn-bg:#fff3dd;--warn-fg:#6b4300;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
+    --bed:#c2410c;--wash:#0b5fff;--food:#14703a;--svc:#7c3aed;--house:#555;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --bg:#111;--fg:#f2f2f2;--muted:#a9a9a9;--line:#333;--card:#1b1b1b;
     --accent:#7fb0ff;--yes:#5fcf8e;--no:#777;--maybe:#e8b45f;
     --warn-bg:#3a2d12;--warn-fg:#ffd79a;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
+    --bed:#fb923c;--wash:#7fb0ff;--food:#5fcf8e;--svc:#c4a5fd;--house:#aaa;
   }}
   html{-webkit-text-size-adjust:100%}
   body{background:var(--bg);color:var(--fg);padding-bottom:48px;
@@ -30,8 +33,35 @@
     margin:16px 0 8px;text-decoration:none;font-weight:700;font-size:17px}
   .crisis span{display:block;font-weight:400;font-size:14px;margin-top:3px;opacity:.9}
 
+  /* ── Map ── */
+  .mapbox{margin:18px 0 6px}
+  #map{height:355px;border-radius:12px;border:1px solid var(--line);background:#e8e8e8;z-index:0}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #map{background:#222}}
+  .leaflet-container{font:inherit}
+  .leaflet-popup-content{margin:11px 13px;font-size:15px;line-height:1.45}
+  .leaflet-popup-content b{font-size:16px}
+  .pop-links{margin-top:8px;display:flex;gap:8px}
+  .pop-links a{flex:1;text-align:center;padding:8px 6px;border-radius:7px;
+    text-decoration:none;font-weight:600;font-size:14px;border:1px solid var(--accent);color:var(--accent)}
+  .pop-links a.c{background:var(--accent);color:#fff}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:9px;font-size:13.5px;color:var(--muted)}
+  .legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:-1px}
+
+  .near{width:100%;min-height:52px;margin-top:10px;border:none;border-radius:11px;
+    background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .near{color:#0b1220}}
+  .near[disabled]{opacity:.6}
+  #nearlist{margin-top:11px}
+  #nearlist a{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+    padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;
+    text-decoration:none;color:var(--fg)}
+  #nearlist .d{color:var(--accent);font-weight:700;white-space:nowrap;font-size:15px}
+  #nearlist .t{font-weight:600}
+  #nearlist .s{display:block;color:var(--muted);font-size:13.5px;font-weight:400}
+
   .callfirst{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;
     padding:12px 14px;margin:16px 0;font-size:15px}
+  .key{font-size:13.5px;margin-top:6px;display:block}
 
   h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
     margin:30px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
@@ -41,8 +71,10 @@
   .card.flag{border-color:var(--maybe);border-width:2px}
   .name{font-weight:700;font-size:18px;line-height:1.3}
   .addr{color:var(--muted);font-size:15px;margin-top:3px}
+  .dist{display:inline-block;margin-top:7px;padding:4px 9px;border-radius:7px;
+    background:var(--accent);color:#fff;font-size:14px;font-weight:700}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dist{color:#0b1220}}
   .hours{margin-top:8px;font-size:15.5px}
-  .hours b{font-weight:700}
 
   ul.fac{list-style:none;margin:11px 0 0;display:flex;flex-wrap:wrap;gap:6px}
   ul.fac li{font-size:14px;line-height:1.3;padding:5px 9px;border-radius:7px;
@@ -61,12 +93,10 @@
 
   .note{background:var(--warn-bg);color:var(--warn-fg);border-radius:9px;
     padding:10px 12px;margin-top:11px;font-size:14.5px}
-  .note b{font-weight:700}
 
   footer{margin-top:34px;padding-top:15px;border-top:1px solid var(--line);
     color:var(--muted);font-size:14px}
   footer p{margin-bottom:9px}
-  .key{font-size:13.5px;color:var(--muted);margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -82,6 +112,22 @@
   <a class="crisis" href="tel:+12064613222">King County Crisis Line — 206-461-3222
     <span>24 hours. Can send someone to you in person.</span></a>
 
+  <div class="mapbox">
+    <div id="map"></div>
+    <p class="key" id="maphint" hidden style="color:var(--muted);margin-top:7px">
+      Use two fingers to move the map, and pinch to zoom in. Tap a dot for details. Solid Ground is 4 miles north, off the map — the button below shows how far everything is.</p>
+    <div class="legend">
+      <span><i style="background:var(--bed)"></i>Beds</span>
+      <span><i style="background:var(--wash)"></i>Showers &amp; laundry</span>
+      <span><i style="background:var(--food)"></i>Food</span>
+      <span><i style="background:var(--svc)"></i>ID &amp; phones</span>
+      <span><i style="background:var(--house)"></i>Housing</span>
+      <span><i style="background:#111;border:2px solid #fff;box-shadow:0 0 0 1px #111"></i>King Street Station</span>
+    </div>
+    <button class="near" id="near">Show what is closest to me</button>
+    <div id="nearlist"></div>
+  </div>
+
   <div class="callfirst"><b>Call before you walk anywhere.</b> Hours and rules change often, and some
     of what is below could not be confirmed. A phone call saves an hour of walking.
     <span class="key">On each place: <b style="color:var(--yes)">green = confirmed</b> ·
@@ -90,7 +136,7 @@
 
   <h2>Showers, laundry, help — best first stop</h2>
 
-  <div class="card">
+  <div class="card" data-k="compass">
     <div class="name">Compass Hygiene Center &amp; Day Center</div>
     <div class="addr">77 S Washington St — a few minutes from King Street Station</div>
     <div class="hours">Showers &amp; laundry: <b>Mon–Fri 7am–4pm, Sat 8am–12pm</b><br>
@@ -104,13 +150,12 @@
     <div class="actions">
       <a class="btn call" href="tel:+12064741680">Call hygiene</a>
       <a class="btn" href="tel:+12064741630">Call day center</a>
-      <a class="btn" href="https://maps.google.com/?q=77+S+Washington+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
     </div>
     <div class="note"><b>If you only go one place, make it this one.</b> Showers, laundry and someone
       who can start housing paperwork, all in one building, close to where you are.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="urbanreststop">
     <div class="name">Urban Rest Stop — Downtown</div>
     <div class="addr">1924 9th Ave</div>
     <div class="hours"><b>Arrive a weekday morning, around 8am.</b> That time works under every
@@ -120,17 +165,14 @@
       <li class="y">Restrooms</li><li class="n">No beds</li><li class="n">No meals</li>
     </ul>
     <div class="cost">Free. Soap and towels provided.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063320110">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=1924+9th+Ave+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063320110">Call</a></div>
     <div class="note">Four different schedules are posted in different places, and weekend hours are
       the least reliable. <b>Shower sign-up has to be done in person.</b> Laundry takes about 2 hours.</div>
   </div>
 
   <h2>A place to sleep</h2>
 
-  <div class="card">
+  <div class="card" data-k="nightwatch">
     <div class="name">Operation Nightwatch</div>
     <div class="addr">302 14th Ave S</div>
     <div class="hours"><b>Arrive 8pm.</b> Hot meal at 8pm, then they find you a downtown shelter bed.</div>
@@ -139,15 +181,12 @@
       <li class="q">Housing help — ask</li><li class="n">No showers</li><li class="n">No laundry</li>
     </ul>
     <div class="cost">Free. Single men 18+. No ID requirement mentioned.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063292099">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=302+14th+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063292099">Call</a></div>
     <div class="note"><b>Best option late at night.</b> They do not keep many beds here — what they do
       is get you into one somewhere downtown. Sources disagree on closing time, so do not arrive late.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="breadoflife">
     <div class="name">Bread of Life Mission</div>
     <div class="addr">97 S Main St — close to King Street Station</div>
     <div class="hours">Shelter open <b>24 hours</b>. To get a bed, <b>sign up 5:30–6:15pm</b>.
@@ -156,17 +195,14 @@
       <li class="y">Beds — men 18+</li><li class="y">Showers</li>
       <li class="y">Laundry</li><li class="y">Meals</li><li class="q">Housing help — ask</li>
     </ul>
-    <div class="cost">Bring <b>$5 and photo ID</b> if you can — see below. Sleeping area is up 3 flights of stairs.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12066823579">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=97+S+Main+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="cost">Bring <b>$5 and photo ID</b> if you can. Sleeping area is up 3 flights of stairs.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066823579">Call</a></div>
     <div class="note">The newest guide says <b>$5 and valid ID required</b>. County listings say there is
       no fee. Bring both if you have them. Guests are asked to commit to staying sober.
       Storage also available: $20/month plus a $15 key deposit you get back.</div>
   </div>
 
-  <div class="card flag">
+  <div class="card flag" data-k="ugm">
     <div class="name">Union Gospel Mission — Men's Shelter</div>
     <div class="addr">318 2nd Ave Ext S</div>
     <div class="hours">Listed as <b>intake Mon–Fri 8am–5pm</b>, but we could not confirm this.</div>
@@ -175,16 +211,13 @@
       <li class="q">Showers — likely</li><li class="q">Laundry — ask</li><li class="q">Housing help — ask</li>
     </ul>
     <div class="cost">No fee found. You do not have to be sober, but they ask that you want to get there.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12065014357">Call first</a>
-      <a class="btn" href="https://maps.google.com/?q=318+2nd+Ave+Ext+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12065014357">Call first</a></div>
     <div class="note"><b>Call before going.</b> This shelter is missing from the county's current
       shelter list and has no hours posted on its own site. It may well be open — we just could not
       confirm it. You can go just for a meal without staying.</div>
   </div>
 
-  <div class="card flag">
+  <div class="card flag" data-k="booth">
     <div class="name">Salvation Army — William Booth Center</div>
     <div class="addr">811 Maynard Ave S</div>
     <div class="hours">One listing says overnight <b>7pm–7am</b>. Not confirmed.</div>
@@ -193,46 +226,37 @@
       <li class="q">Showers — ask</li><li class="q">Laundry — ask</li><li class="q">Meals — ask</li>
     </ul>
     <div class="cost">Cost and ID rules not stated anywhere. Ask on the phone.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12066210145">Call first</a>
-      <a class="btn" href="https://maps.google.com/?q=811+Maynard+Ave+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12066210145">Call first</a></div>
     <div class="note"><b>Call before going.</b> Like UGM, this one is missing from the county's current
       shelter list and posts no hours. Caseworkers here do help people into longer-term housing,
       which is worth asking about.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="stmartin">
     <div class="name">St. Martin de Porres Shelter</div>
     <div class="addr">1561 Alaskan Way S</div>
     <div class="hours">Open <b>24 hours daily</b>.</div>
     <ul class="fac"><li class="y">Beds</li><li class="q">Other services — ask</li></ul>
     <div class="cost"><b>Men aged 50 and over only.</b></div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063236341">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=1561+Alaskan+Way+S+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063236341">Call</a></div>
   </div>
 
   <h2>Food</h2>
 
-  <div class="card">
+  <div class="card" data-k="cathedral">
     <div class="name">Cathedral Kitchen</div>
     <div class="addr">910 Columbia St</div>
     <div class="hours"><b>Mon–Fri 4:00–4:45pm</b> and <b>Sunday 7–8am</b></div>
     <ul class="fac"><li class="y">Free meal</li><li class="y">Anyone in need</li></ul>
     <div class="cost">Free. No ID, no sign-up.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12062642091">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=910+Columbia+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12062642091">Call</a></div>
     <div class="note">The most dependable free meal near everything else on this page. The window is
       short — be there by 4pm on a weekday.</div>
   </div>
 
   <h2>Replacing your ID, phone calls, mail</h2>
 
-  <div class="card">
+  <div class="card" data-k="solanus">
     <div class="name">Solanus Casey Center</div>
     <div class="addr">804 9th Ave, at St. James Cathedral</div>
     <div class="hours"><b>Mon–Thu, arrive between 1pm and 3pm.</b> Closed Fri, Sat, Sun.</div>
@@ -243,16 +267,13 @@
       <li class="n">No showers</li><li class="n">No beds</li><li class="n">No meals</li>
     </ul>
     <div class="cost">Free. Coffee, tea and snacks only — not a meal site.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12062230907">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=804+9th+Ave+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12062230907">Call</a></div>
     <div class="note"><b>Go here to replace an ID.</b> Several shelters want one. They also note that
       money is tight and they cannot promise every request. Bus passes are given out by lottery on
       the last Wednesday of the month.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="indiancenter">
     <div class="name">Seattle Indian Center</div>
     <div class="addr">1265 S Main St, Suite 105</div>
     <div class="hours"><b>Mon–Fri 9:30am–5:30pm</b></div>
@@ -261,17 +282,14 @@
       <li class="y">Mailing address</li><li class="n">No beds</li>
     </ul>
     <div class="cost">Free, open to everyone. A current state ID is needed to use the mail service.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063298700">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=1265+S+Main+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063298700">Call</a></div>
     <div class="note">A fixed mailing address is worth setting up early — benefits, court letters and
       job replies all need somewhere to go.</div>
   </div>
 
   <h2>Getting into housing</h2>
 
-  <div class="card">
+  <div class="card" data-k="solidground">
     <div class="name">Solid Ground — North Seattle</div>
     <div class="addr">1501 N 45th St (Wallingford)</div>
     <div class="hours">Walk in for a housing assessment <b>Wednesday 11am–1pm</b>, first come first
@@ -281,24 +299,20 @@
       <li class="n">No beds here</li><li class="n">No showers</li><li class="n">No laundry</li>
     </ul>
     <div class="cost">Free. This is North Seattle's official way onto the county housing list.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12066946700">Call</a>
-      <a class="btn" href="https://maps.google.com/?q=1501+N+45th+St+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
-    <div class="note">There is a food pantry in the same building run by FamilyWorks:
-      <b>Tue 12–2pm, Thu 3–6pm, Fri 11am–1pm</b>. Worth timing your visit around it.</div>
+    <div class="actions"><a class="btn call" href="tel:+12066946700">Call</a></div>
+    <div class="note">This one is a long way north — about an hour on foot from downtown. Check the
+      distance below before setting out. There is a food pantry in the same building run by
+      FamilyWorks: <b>Tue 12–2pm, Thu 3–6pm, Fri 11am–1pm</b>.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="ccs">
     <div class="name">Catholic Community Services</div>
     <div class="addr">100 23rd Ave S</div>
     <div class="hours"><b>Appointment only, Mon–Fri 9am–5pm. Do not walk in.</b></div>
     <ul class="fac"><li class="y">Housing list access</li><li class="n">No beds</li>
       <li class="n">No showers</li><li class="n">No meals</li></ul>
     <div class="cost">Free. Phone first and book a time.</div>
-    <div class="actions">
-      <a class="btn call" href="tel:+12063285707">Call</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063285707">Call</a></div>
     <div class="note">Mostly offices, and walk-ins usually cannot be seen. If you want Catholic
       Community Services in person, <b>go to the Solanus Casey Center above instead</b>.</div>
   </div>
@@ -318,7 +332,7 @@
 
   <h2>Somewhere warm and dry</h2>
 
-  <div class="card">
+  <div class="card" data-k="library">
     <div class="name">Seattle Central Library</div>
     <div class="addr">1000 4th Ave</div>
     <div class="hours"><b>Mon 10–6 · Tue, Wed, Thu 10–8 · Fri, Sat, Sun 10–6</b></div>
@@ -327,23 +341,17 @@
       <li class="y">Computers — 2 hrs a day</li><li class="n">No showers</li><li class="n">No meals</li>
     </ul>
     <div class="cost">Free to sit. <b>Computers need a library card</b> — free to get, ask at the desk.</div>
-    <div class="actions">
-      <a class="btn" href="https://maps.google.com/?q=Seattle+Central+Library+1000+4th+Ave" target="_blank" rel="noopener">Map</a>
-      <a class="btn call" href="tel:+12063864636">Call</a>
-    </div>
+    <div class="actions"><a class="btn call" href="tel:+12063864636">Call</a></div>
     <div class="note">These hours are confirmed and reliable. <b>Closed Nov 26, Dec 24, Dec 25 and
       Jan 1.</b> Use the computers for email if you have no phone.</div>
   </div>
 
-  <div class="card">
+  <div class="card" data-k="miller">
     <div class="name">Miller Community Center — public showers</div>
     <div class="addr">330 19th Ave E</div>
     <div class="hours"><b>Mon–Fri 10am–5:30pm</b>, last shower 5pm</div>
     <ul class="fac"><li class="y">Free showers</li></ul>
     <div class="cost">Free, run by Seattle Parks.</div>
-    <div class="actions">
-      <a class="btn" href="https://maps.google.com/?q=330+19th+Ave+E+Seattle+WA" target="_blank" rel="noopener">Map</a>
-    </div>
   </div>
 
   <footer>
@@ -358,5 +366,135 @@
   </footer>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+const PLACES = {
+  compass:{n:"Compass Hygiene Center",lat:47.60067,lon:-122.33518,c:"wash",tel:"+12064741680",w:"Showers, laundry, housing help"},
+  urbanreststop:{n:"Urban Rest Stop",lat:47.61626,lon:-122.33524,c:"wash",tel:"+12063320110",w:"Showers and laundry"},
+  nightwatch:{n:"Operation Nightwatch",lat:47.59987,lon:-122.31389,c:"bed",tel:"+12063292099",w:"8pm meal, sends you to a bed"},
+  breadoflife:{n:"Bread of Life Mission",lat:47.59989,lon:-122.33458,c:"bed",tel:"+12066823579",w:"Beds, showers, laundry, meals"},
+  ugm:{n:"Union Gospel Mission",lat:47.60383,lon:-122.33006,c:"bed",tel:"+12065014357",w:"Beds and meals — call first"},
+  booth:{n:"William Booth Center",lat:47.59529,lon:-122.32546,c:"bed",tel:"+12066210145",w:"Beds — call first"},
+  stmartin:{n:"St. Martin de Porres",lat:47.58852,lon:-122.33856,c:"bed",tel:"+12063236341",w:"Beds, men 50+ only"},
+  cathedral:{n:"Cathedral Kitchen",lat:47.60715,lon:-122.32588,c:"food",tel:"+12062642091",w:"Free meal, weekdays 4–4:45pm"},
+  solanus:{n:"Solanus Casey Center",lat:47.60768,lon:-122.32579,c:"svc",tel:"+12062230907",w:"ID help, phones, computers"},
+  indiancenter:{n:"Seattle Indian Center",lat:47.59976,lon:-122.31445,c:"svc",tel:"+12063298700",w:"Showers, laundry, mail address"},
+  solidground:{n:"Solid Ground",lat:47.66118,lon:-122.33890,c:"house",tel:"+12066946700",w:"Housing assessment, Weds 11–1"},
+  ccs:{n:"Catholic Community Services",lat:47.60119,lon:-122.30157,c:"house",tel:"+12063285707",w:"Housing list — appointment only"},
+  library:{n:"Seattle Central Library",lat:47.60671,lon:-122.33270,c:"svc",tel:"+12063864636",w:"Warm, computers, restrooms"},
+  miller:{n:"Miller Community Center",lat:47.62185,lon:-122.30692,c:"wash",w:"Free public showers"}
+};
+const STATION={n:"King Street Station",lat:47.59845,lon:-122.32990,w:"Where you arrived — Amtrak"};
+const COLORS={bed:"--bed",wash:"--wash",food:"--food",svc:"--svc",house:"--house"};
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const walkUrl=(lat,lon)=>`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
+
+// Walking-directions button on every card that has a location
+Object.entries(PLACES).forEach(([k,p])=>{
+  const card=document.querySelector(`.card[data-k="${k}"]`);
+  if(!card) return;
+  const acts=card.querySelector('.actions')||(()=>{
+    const d=document.createElement('div'); d.className='actions';
+    card.insertBefore(d, card.querySelector('.note')); return d;})();
+  const a=document.createElement('a');
+  a.className='btn'; a.target='_blank'; a.rel='noopener';
+  a.href=walkUrl(p.lat,p.lon); a.textContent='Walk there';
+  acts.appendChild(a);
+});
+
+// ── Map ──
+const map=L.map('map',{scrollWheelZoom:false}).setView([47.6020,-122.3285],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  maxZoom:19, attribution:'&copy; OpenStreetMap'}).addTo(map);
+
+const markers={};
+
+// Cathedral Kitchen and Solanus Casey share the St James Cathedral block, so one
+// pin hides the other. Nudge the pair apart far enough to tap; the walking links
+// still use the true coordinates.
+// Same for the pairs that share a street corner. Each nudge is ~100m, smaller than
+// the block they sit on, so the pin still points at the right place to walk to.
+const NUDGE={
+  cathedral:[-0.00055,0], solanus:[0.00055,0],
+  compass:[0.00045,0], breadoflife:[-0.00045,0],
+  nightwatch:[0.00075,0], indiancenter:[-0.00075,0]
+};
+
+Object.entries(PLACES).forEach(([k,p])=>{
+  const off=NUDGE[k]||[0,0];
+  const m=L.circleMarker([p.lat+off[0],p.lon+off[1]],{
+    radius:9, color:'#fff', weight:2, fillColor:cssVar(COLORS[p.c]), fillOpacity:1
+  }).addTo(map);
+  const tel=p.tel?`<a class="c" href="tel:${p.tel}">Call</a>`:'';
+  m.bindPopup(`<b>${p.n}</b><br>${p.w}<div class="pop-links">${tel}
+    <a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">Walk there</a></div>`);
+  m.on('click',()=>{ const c=document.querySelector(`.card[data-k="${k}"]`); if(c) markers[k]=c; });
+});
+
+// King Street Station — not a service, a landmark to get your bearings from.
+L.marker([STATION.lat,STATION.lon],{
+  icon:L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
+    html:'<div style="width:26px;height:26px;border-radius:50%;background:#111;'+
+         'border:3px solid #fff;box-shadow:0 0 0 1px #111;display:flex;'+
+         'align-items:center;justify-content:center;color:#fff;font-size:14px">&#9733;</div>'})
+}).addTo(map).bindPopup('<b>King Street Station</b><br>Where you arrived.');
+// Fitting every pin forces the zoom so far out that the downtown ones become an
+// untappable clump. Frame the dense core instead; the two distant places carry their
+// walking time on the card, and the button below sorts everything by distance.
+map.setView([47.6024,-122.3201],13);
+
+// On a phone, one finger scrolls the page; two fingers move the map.
+if(L.Browser.mobile){
+  map.dragging.disable();
+  const el=map.getContainer();
+  el.addEventListener('touchstart',e=>{ if(e.touches.length>1) map.dragging.enable(); },{passive:true});
+  el.addEventListener('touchend',()=>{ map.dragging.disable(); },{passive:true});
+  document.getElementById('maphint').hidden=false;
+}
+
+// ── Distances ──
+const btn=document.getElementById('near'), list=document.getElementById('nearlist');
+function miles(a,b,c,d){const R=3958.8,t=Math.PI/180;
+  const x=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));}
+function walkMins(mi){return Math.round(mi/3*60);} // ~3 mph on foot
+
+// Straight-line distance understates a real walk through a street grid, so round up a little.
+function setDist(k,mi,from){
+  const card=document.querySelector(`.card[data-k="${k}"]`);
+  if(!card) return;
+  let d=card.querySelector('.dist');
+  if(!d){ d=document.createElement('div'); d.className='dist'; card.querySelector('.addr').after(d); }
+  d.textContent=`${mi.toFixed(1)} mi from ${from} — about ${walkMins(mi)} min walk`;
+}
+// Default: distance from the station, so the page is useful without sharing location.
+Object.entries(PLACES).forEach(([k,p])=>
+  setDist(k,miles(STATION.lat,STATION.lon,p.lat,p.lon),'the station'));
+
+btn.addEventListener('click',()=>{
+  if(!navigator.geolocation){list.innerHTML='<p class="key">This phone will not share its location. Use the map above instead.</p>';return;}
+  btn.disabled=true; btn.textContent='Finding you…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:la,longitude:lo}=pos.coords;
+    L.circleMarker([la,lo],{radius:8,color:'#fff',weight:3,fillColor:'#e11d48',fillOpacity:1})
+      .addTo(map).bindPopup('<b>You are here</b>');
+    const sorted=Object.entries(PLACES)
+      .map(([k,p])=>({k,p,mi:miles(la,lo,p.lat,p.lon)}))
+      .sort((a,b)=>a.mi-b.mi);
+    sorted.forEach(({k,mi})=>setDist(k,mi,'you'));
+    list.innerHTML='<p class="key" style="margin-bottom:8px">Closest to you right now:</p>'+
+      sorted.slice(0,5).map(({k,p,mi})=>
+        `<a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">
+           <span><span class="t">${p.n}</span><span class="s">${p.w}</span></span>
+           <span class="d">${mi.toFixed(1)} mi<br>${walkMins(mi)} min</span></a>`).join('');
+    map.setView([la,lo],14);
+    btn.textContent='Distances added below ✓';
+  },err=>{
+    btn.disabled=false; btn.textContent='Show what is closest to me';
+    list.innerHTML='<p class="key">Could not get your location. Check location permission for this page, or just use the map above.</p>';
+  },{enableHighAccuracy:true,timeout:10000,maximumAge:300000});
+});
+</script>
 </body>
 </html>
