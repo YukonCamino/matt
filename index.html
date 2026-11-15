@@ -6,121 +6,20 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Seattle Resources</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#fff;--fg:#111;--muted:#5a5a5a;--line:#dcdcdc;--card:#fff;
-    --accent:#0b5fff;--yes:#14703a;--no:#8a8a8a;--maybe:#8a5a00;
-    --warn-bg:#fff3dd;--warn-fg:#6b4300;--top-bg:#eaf7ee;--top-line:#1f8a4c;--top-note:#d3efdc;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
-    --bed:#c2410c;--wash:#0b5fff;--food:#14703a;--svc:#7c3aed;--house:#555;--lib:#0e7490;--wifi:#7c3aed;--cafe:#92400e;
-  }
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --bg:#111;--fg:#f2f2f2;--muted:#a9a9a9;--line:#333;--card:#1b1b1b;
-    --accent:#7fb0ff;--yes:#5fcf8e;--no:#777;--maybe:#e8b45f;
-    --warn-bg:#3a2d12;--warn-fg:#ffd79a;--top-bg:#13281b;--top-line:#5fcf8e;--top-note:#1d3a27;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
-    --bed:#fb923c;--wash:#7fb0ff;--food:#5fcf8e;--svc:#c4a5fd;--house:#aaa;--lib:#5ad1e6;--wifi:#c4a5fd;--cafe:#e0a36b;
-  }}
-  html{-webkit-text-size-adjust:100%}
-  body{background:var(--bg);color:var(--fg);padding-bottom:48px;
-    font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-  .wrap{max-width:640px;margin:0 auto;padding:0 15px}
-  header{padding:22px 0 4px}
-  h1{font-size:25px;line-height:1.2}
-  .sub{color:var(--muted);font-size:15px;margin-top:6px}
-
-  .crisis{display:block;background:var(--urgent-bg);color:var(--urgent-fg);
-    border:1px solid currentColor;border-radius:12px;padding:13px 15px;
-    margin:16px 0 8px;text-decoration:none;font-weight:700;font-size:17px}
-  .crisis span{display:block;font-weight:400;font-size:14px;margin-top:3px;opacity:.9}
-
-  /* ── Map ── */
-  .mapbox{margin:18px 0 6px}
-  #map{height:355px;border-radius:12px;border:1px solid var(--line);background:#e8e8e8;z-index:0}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #map{background:#222}}
-  .leaflet-container{font:inherit}
-  .leaflet-popup-content{margin:11px 13px;font-size:15px;line-height:1.45}
-  .leaflet-popup-content b{font-size:16px}
-  .pop-links{margin-top:8px;display:flex;gap:8px}
-  .pop-links a{flex:1;text-align:center;padding:8px 6px;border-radius:7px;
-    text-decoration:none;font-weight:600;font-size:14px;border:1px solid var(--accent);color:var(--accent)}
-  .pop-links a.c{background:var(--accent);color:#fff}
-  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:9px;font-size:13.5px;color:var(--muted)}
-  .legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:-1px}
-
-  .near{width:100%;min-height:52px;margin-top:10px;border:none;border-radius:11px;
-    background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .near{color:#0b1220}}
-  .near[disabled]{opacity:.6}
-  #nearlist{margin-top:11px}
-  #nearlist a{display:flex;justify-content:space-between;gap:10px;align-items:baseline;
-    padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;
-    text-decoration:none;color:var(--fg)}
-  #nearlist .d{color:var(--accent);font-weight:700;white-space:nowrap;font-size:15px}
-  #nearlist .t{font-weight:600}
-  #nearlist .s{display:block;color:var(--muted);font-size:13.5px;font-weight:400}
-
-  /* ── Tabs ── */
-  .tabs{display:flex;gap:6px;margin:20px 0 4px;position:sticky;top:0;z-index:500;
-    background:var(--bg);padding:8px 0}
-  .tabs button{flex:1;min-height:48px;border:1px solid var(--line);background:var(--card);
-    color:var(--muted);font:inherit;font-weight:700;font-size:16px;border-radius:10px;cursor:pointer}
-  .tabs button[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:#0b1220}}
-  .panel[hidden]{display:none}
-
-  .callfirst{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;
-    padding:12px 14px;margin:16px 0;font-size:15px}
-  .key{font-size:13.5px;margin-top:6px;display:block}
-
-  /* Section headings: a band in the same colour as that section's map pins */
-  h2{--c:var(--accent);display:flex;align-items:center;gap:10px;
-    font-size:20px;font-weight:800;line-height:1.25;color:var(--fg);
-    margin:36px 0 12px;padding:13px 14px;border-radius:10px;
-    background:var(--card);background:color-mix(in srgb,var(--c) 14%,var(--bg));
-    border-left:6px solid var(--c)}
-
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:14px 15px;margin-bottom:12px}
-  .card.top{background:var(--top-bg);border:2px solid var(--top-line)}
-  .card.top .name::before{content:'\2605';color:var(--top-line);margin-right:7px}
-  .card.top .note{background:var(--top-note);color:var(--fg)}
-  .card.flag{border-color:var(--maybe);border-width:2px}
-  .name{font-weight:700;font-size:18px;line-height:1.3}
-  .addr{color:var(--muted);font-size:15px;margin-top:3px}
-  .dist{display:inline-block;margin-top:7px;padding:4px 9px;border-radius:7px;
-    background:var(--accent);color:#fff;font-size:14px;font-weight:700}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dist{color:#0b1220}}
-  .hours{margin-top:8px;font-size:15.5px}
-
-  ul.fac{list-style:none;margin:11px 0 0;display:flex;flex-wrap:wrap;gap:6px}
-  ul.fac li{font-size:14px;line-height:1.3;padding:5px 9px;border-radius:7px;
-    border:1px solid var(--line);white-space:nowrap}
-  li.y{color:var(--yes);border-color:currentColor}
-  li.n{color:var(--no)}
-  li.q{color:var(--maybe);border-color:currentColor}
-  .cost{margin-top:10px;font-size:15px;font-weight:600}
-
-  .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
-  .btn{flex:1 1 auto;min-width:118px;min-height:46px;display:flex;align-items:center;
-    justify-content:center;border:1px solid var(--accent);border-radius:9px;
-    color:var(--accent);text-decoration:none;font-weight:600;font-size:16px;padding:10px 14px}
-  .btn.call{background:var(--accent);color:#fff}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.call{color:#0b1220}}
-
-  .note{background:var(--warn-bg);color:var(--warn-fg);border-radius:9px;
-    padding:10px 12px;margin-top:11px;font-size:14.5px}
-
-  footer{margin-top:34px;padding-top:15px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:14px}
-  footer p{margin-bottom:9px}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <h1>Seattle Resources</h1>
-    <p class="sub">Near King Street Station and Pioneer Square.</p>
+    <div>
+      <h1>Seattle Resources</h1>
+      <p class="sub">Near King Street Station and Pioneer Square.</p>
+    </div>
+    <nav class="city" aria-label="Choose city">
+      <a href="index.html" aria-current="page">Seattle</a>
+      <a href="walnut-creek.html">Walnut Creek</a>
+    </nav>
   </header>
 
   <a class="crisis" href="tel:211">Find a bed, housing or food — call 211
@@ -390,7 +289,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
-const PLACES = {
+const CITY={
+PLACES:{
   compass:{t:"help",n:"Compass Center",lat:47.60071,lon:-122.33582,c:"wash",tel:"+12064741680",w:"Showers, laundry, meals, housing help"},
   urbanreststop:{t:"help",n:"Urban Rest Stop",lat:47.61626,lon:-122.33524,c:"wash",tel:"+12063320110",w:"Showers and laundry"},
   nightwatch:{t:"help",n:"Operation Nightwatch",lat:47.59987,lon:-122.31389,c:"bed",tel:"+12063292099",w:"Check in 7:45pm, sends you to a bed"},
@@ -415,141 +315,13 @@ const PLACES = {
   oasis:{t:"wifi",n:"Oasis Tea Zone",lat:47.59767,lon:-122.32656,c:"cafe",w:"Free wifi, open until midnight"},
   sbux:{t:"wifi",n:"Starbucks — Columbia Center",lat:47.60414,lon:-122.33082,c:"cafe",tel:"+12064479934",w:"Free wifi, weekdays 5am–6pm"},
   sbux55:{t:"wifi",n:"Starbucks — Pier 55",lat:47.60479,lon:-122.34001,c:"cafe",tel:"+12065547060",w:"Free wifi, every day 5am–9pm"}
+},
+STATION:{n:"Amtrak Station",lat:47.59845,lon:-122.32990,w:"Where you arrived (King Street Station)."},
+NUDGE:{compass:[0.00045,0], breadoflife:[-0.00045,0], three03:[-0.0006,-0.0004],
+  cityhall:[-0.0005,0], sbux:[0.0005,0], zeitgeist:[-0.00045,0], umbria:[0.00045,0]},
+HELP_VIEW:[[47.6024,-122.3201],13]
 };
-const STATION={n:"Amtrak Station",lat:47.59845,lon:-122.32990,w:"Where you arrived — Amtrak"};
-const COLORS={bed:"--bed",wash:"--wash",food:"--food",house:"--house",lib:"--lib",wifi:"--wifi",cafe:"--cafe"};
-const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const walkUrl=(lat,lon)=>`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
-
-// Walking-directions button on every card that has a location
-Object.entries(PLACES).forEach(([k,p])=>{
-  const card=document.querySelector(`.card[data-k="${k}"]`);
-  if(!card) return;
-  const acts=card.querySelector('.actions')||(()=>{
-    const d=document.createElement('div'); d.className='actions';
-    card.insertBefore(d, card.querySelector('.note')); return d;})();
-  const a=document.createElement('a');
-  a.className='btn'; a.target='_blank'; a.rel='noopener';
-  a.href=walkUrl(p.lat,p.lon); a.textContent='Walk there';
-  acts.appendChild(a);
-});
-
-// ── Map ──
-const map=L.map('map',{scrollWheelZoom:false}).setView([47.6024,-122.3201],13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  maxZoom:19, attribution:'&copy; OpenStreetMap'}).addTo(map);
-
-// Pins that share a corner hide each other. Each nudge is under a block, so the pin
-// still points at the right spot; walking links use the true coordinates.
-const NUDGE={compass:[0.00045,0], breadoflife:[-0.00045,0], three03:[-0.0006,-0.0004],
-  cityhall:[-0.0005,0], sbux:[0.0005,0], zeitgeist:[-0.00045,0], umbria:[0.00045,0]};
-
-// One layer of pins per tab, so each tab's map only shows what that tab lists.
-const layers={help:L.layerGroup(),lib:L.layerGroup(),wifi:L.layerGroup()};
-Object.entries(PLACES).forEach(([k,p])=>{
-  const off=NUDGE[k]||[0,0];
-  const m=L.circleMarker([p.lat+off[0],p.lon+off[1]],{
-    radius:9, color:'#fff', weight:2, fillColor:cssVar(COLORS[p.c]), fillOpacity:1
-  }).addTo(layers[p.t]);
-  const tel=p.tel?`<a class="c" href="tel:${p.tel}">Call</a>`:'';
-  m.bindPopup(`<b>${p.n}</b><br>${p.w}<div class="pop-links">${tel}
-    <a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">Walk there</a></div>`);
-});
-
-// Amtrak Station — not a service, a landmark to get your bearings from. Shown on every tab.
-L.marker([STATION.lat,STATION.lon],{zIndexOffset:1000,
-  icon:L.divIcon({className:'',iconSize:[26,26],iconAnchor:[13,13],
-    html:'<div style="width:26px;height:26px;border-radius:50%;background:#111;'+
-         'border:3px solid #fff;box-shadow:0 0 0 1px #111;display:flex;'+
-         'align-items:center;justify-content:center;color:#fff;font-size:14px">&#9733;</div>'})
-}).addTo(map).bindPopup('<b>Amtrak Station</b><br>Where you arrived (King Street Station).');
-
-let activeTab='help';
-function showTabOnMap(tab){
-  Object.entries(layers).forEach(([t,g])=>{ if(t===tab) g.addTo(map); else map.removeLayer(g); });
-  document.querySelectorAll('.legend span[data-tab]').forEach(el=>el.hidden=(el.dataset.tab!==tab));
-  if(tab==='help'){
-    // Fitting every Help pin zooms out so far the downtown ones clump; frame the core instead.
-    map.setView([47.6024,-122.3201],13);
-  }else{
-    const pts=Object.values(PLACES).filter(p=>p.t===tab).map(p=>[p.lat,p.lon]);
-    pts.push([STATION.lat,STATION.lon]);
-    map.fitBounds(pts,{padding:[28,28],maxZoom:16});
-  }
-}
-showTabOnMap('help');
-
-// On a phone, one finger scrolls the page; two fingers move the map.
-if(L.Browser.mobile){
-  map.dragging.disable();
-  const el=map.getContainer();
-  el.addEventListener('touchstart',e=>{ if(e.touches.length>1) map.dragging.enable(); },{passive:true});
-  el.addEventListener('touchend',()=>{ map.dragging.disable(); },{passive:true});
-}
-
-// ── Tabs ──
-document.querySelectorAll('.tabs button').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
-    document.querySelectorAll('.panel').forEach(p=>p.hidden=(p.id!==b.getAttribute('aria-controls')));
-    activeTab={'p-help':'help','p-lib':'lib','p-wifi':'wifi'}[b.getAttribute('aria-controls')];
-    showTabOnMap(activeTab);
-    renderNear();
-    window.scrollTo({top:0,behavior:'instant'});
-  });
-});
-
-// ── Distances ──
-const btn=document.getElementById('near'), list=document.getElementById('nearlist');
-function miles(a,b,c,d){const R=3958.8,t=Math.PI/180;
-  const x=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;
-  return 2*R*Math.asin(Math.sqrt(x));}
-function walkMins(mi){return Math.round(mi/3*60);} // ~3 mph on foot
-// Streets don't run in straight lines; real walking routes average ~30% longer.
-const ROUTE=1.3;
-
-function setDist(k,mi,from){
-  const card=document.querySelector(`.card[data-k="${k}"]`);
-  if(!card) return;
-  let d=card.querySelector('.dist');
-  if(!d){ d=document.createElement('div'); d.className='dist'; card.querySelector('.addr').after(d); }
-  const r=mi*ROUTE;
-  d.textContent=`${r.toFixed(1)} mi from ${from} — about ${walkMins(r)} min walk`;
-}
-// Default: distance from the station, so the page is useful without sharing location.
-Object.entries(PLACES).forEach(([k,p])=>
-  setDist(k,miles(STATION.lat,STATION.lon,p.lat,p.lon),'the station'));
-
-let here=null;
-function renderNear(){
-  if(!here) return;
-  const sorted=Object.entries(PLACES).filter(([,p])=>p.t===activeTab)
-    .map(([k,p])=>({k,p,mi:miles(here[0],here[1],p.lat,p.lon)*ROUTE}))
-    .sort((a,b)=>a.mi-b.mi);
-  list.innerHTML='<p class="key" style="margin-bottom:8px">Closest to you right now:</p>'+
-    sorted.slice(0,5).map(({p,mi})=>
-      `<a href="${walkUrl(p.lat,p.lon)}" target="_blank" rel="noopener">
-         <span><span class="t">${p.n}</span><span class="s">${p.w}</span></span>
-         <span class="d">${mi.toFixed(1)} mi<br>${walkMins(mi)} min</span></a>`).join('');
-}
-
-btn.addEventListener('click',()=>{
-  if(!navigator.geolocation){list.innerHTML='<p class="key">This phone will not share its location. Use the map above instead.</p>';return;}
-  btn.disabled=true; btn.textContent='Finding you…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const{latitude:la,longitude:lo}=pos.coords;
-    L.circleMarker([la,lo],{radius:8,color:'#fff',weight:3,fillColor:'#e11d48',fillOpacity:1})
-      .addTo(map).bindPopup('<b>You are here</b>');
-    here=[la,lo];
-    Object.entries(PLACES).forEach(([k,p])=>setDist(k,miles(la,lo,p.lat,p.lon),'you'));
-    renderNear();
-    map.setView([la,lo],14);
-    btn.textContent='Distances added below ✓';
-  },err=>{
-    btn.disabled=false; btn.textContent='Show what is closest to me';
-    list.innerHTML='<p class="key">Could not get your location. Check location permission for this page, or just use the map above.</p>';
-  },{enableHighAccuracy:true,timeout:10000,maximumAge:300000});
-});
 </script>
+<script src="app.js"></script>
 </body>
 </html>
