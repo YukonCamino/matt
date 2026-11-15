@@ -123,8 +123,6 @@
 
   <div class="mapbox">
     <div id="map"></div>
-    <p class="key" id="maphint" hidden style="color:var(--muted);margin-top:7px">
-      Use two fingers to move the map, and pinch to zoom in. Tap a dot for details. Solid Ground is 4 miles north, off the map — the button below shows how far everything is.</p>
     <div class="legend">
       <span><i style="background:var(--bed)"></i>Beds</span>
       <span><i style="background:var(--wash)"></i>Showers &amp; laundry</span>
@@ -366,7 +364,6 @@ if(L.Browser.mobile){
   const el=map.getContainer();
   el.addEventListener('touchstart',e=>{ if(e.touches.length>1) map.dragging.enable(); },{passive:true});
   el.addEventListener('touchend',()=>{ map.dragging.disable(); },{passive:true});
-  document.getElementById('maphint').hidden=false;
 }
 
 // ── Tabs ──
