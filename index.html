@@ -59,6 +59,15 @@
   #nearlist .t{font-weight:600}
   #nearlist .s{display:block;color:var(--muted);font-size:13.5px;font-weight:400}
 
+  /* ── Tabs ── */
+  .tabs{display:flex;gap:6px;margin:20px 0 4px;position:sticky;top:0;z-index:500;
+    background:var(--bg);padding:8px 0}
+  .tabs button{flex:1;min-height:48px;border:1px solid var(--line);background:var(--card);
+    color:var(--muted);font:inherit;font-weight:700;font-size:16px;border-radius:10px;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:#0b1220}}
+  .panel[hidden]{display:none}
+
   .callfirst{background:var(--warn-bg);color:var(--warn-fg);border-radius:10px;
     padding:12px 14px;margin:16px 0;font-size:15px}
   .key{font-size:13.5px;margin-top:6px;display:block}
@@ -122,12 +131,19 @@
       <span><i style="background:var(--food)"></i>Food</span>
       <span><i style="background:var(--svc)"></i>ID &amp; phones</span>
       <span><i style="background:var(--house)"></i>Housing</span>
-      <span><i style="background:#111;border:2px solid #fff;box-shadow:0 0 0 1px #111"></i>King Street Station</span>
+      <span><i style="background:#111;border:2px solid #fff;box-shadow:0 0 0 1px #111"></i>Amtrak Station</span>
     </div>
     <button class="near" id="near">Show what is closest to me</button>
     <div id="nearlist"></div>
   </div>
 
+  <div class="tabs" role="tablist">
+    <button role="tab" id="t-help" aria-selected="true" aria-controls="p-help">Help</button>
+    <button role="tab" id="t-lib" aria-selected="false" aria-controls="p-lib">Libraries</button>
+    <button role="tab" id="t-wifi" aria-selected="false" aria-controls="p-wifi">Wifi</button>
+  </div>
+
+  <section class="panel" id="p-help" role="tabpanel" aria-labelledby="t-help">
   <div class="callfirst"><b>Call before you walk anywhere.</b> Hours and rules change often, and some
     of what is below could not be confirmed. A phone call saves an hour of walking.
     <span class="key">On each place: <b style="color:var(--yes)">green = confirmed</b> ·
@@ -166,8 +182,7 @@
     </ul>
     <div class="cost">Free. Soap and towels provided.</div>
     <div class="actions"><a class="btn call" href="tel:+12063320110">Call</a></div>
-    <div class="note">Four different schedules are posted in different places, and weekend hours are
-      the least reliable. <b>Shower sign-up has to be done in person.</b> Laundry takes about 2 hours.</div>
+    
   </div>
 
   <h2>A place to sleep</h2>
@@ -182,8 +197,7 @@
     </ul>
     <div class="cost">Free. Single men 18+. No ID requirement mentioned.</div>
     <div class="actions"><a class="btn call" href="tel:+12063292099">Call</a></div>
-    <div class="note"><b>Best option late at night.</b> They do not keep many beds here — what they do
-      is get you into one somewhere downtown. Sources disagree on closing time, so do not arrive late.</div>
+    
   </div>
 
   <div class="card" data-k="breadoflife">
@@ -197,48 +211,7 @@
     </ul>
     <div class="cost">Bring <b>$5 and photo ID</b> if you can. Sleeping area is up 3 flights of stairs.</div>
     <div class="actions"><a class="btn call" href="tel:+12066823579">Call</a></div>
-    <div class="note">The newest guide says <b>$5 and valid ID required</b>. County listings say there is
-      no fee. Bring both if you have them. Guests are asked to commit to staying sober.
-      Storage also available: $20/month plus a $15 key deposit you get back.</div>
-  </div>
-
-  <div class="card flag" data-k="ugm">
-    <div class="name">Union Gospel Mission — Men's Shelter</div>
-    <div class="addr">318 2nd Ave Ext S</div>
-    <div class="hours">Listed as <b>intake Mon–Fri 8am–5pm</b>, but we could not confirm this.</div>
-    <ul class="fac">
-      <li class="y">Beds — up to 30 nights</li><li class="y">Meals — 3 a day, open to anyone</li>
-      <li class="q">Showers — likely</li><li class="q">Laundry — ask</li><li class="q">Housing help — ask</li>
-    </ul>
-    <div class="cost">No fee found. You do not have to be sober, but they ask that you want to get there.</div>
-    <div class="actions"><a class="btn call" href="tel:+12065014357">Call first</a></div>
-    <div class="note"><b>Call before going.</b> This shelter is missing from the county's current
-      shelter list and has no hours posted on its own site. It may well be open — we just could not
-      confirm it. You can go just for a meal without staying.</div>
-  </div>
-
-  <div class="card flag" data-k="booth">
-    <div class="name">Salvation Army — William Booth Center</div>
-    <div class="addr">811 Maynard Ave S</div>
-    <div class="hours">One listing says overnight <b>7pm–7am</b>. Not confirmed.</div>
-    <ul class="fac">
-      <li class="y">Beds — bunks, some single rooms</li><li class="y">Housing help</li>
-      <li class="q">Showers — ask</li><li class="q">Laundry — ask</li><li class="q">Meals — ask</li>
-    </ul>
-    <div class="cost">Cost and ID rules not stated anywhere. Ask on the phone.</div>
-    <div class="actions"><a class="btn call" href="tel:+12066210145">Call first</a></div>
-    <div class="note"><b>Call before going.</b> Like UGM, this one is missing from the county's current
-      shelter list and posts no hours. Caseworkers here do help people into longer-term housing,
-      which is worth asking about.</div>
-  </div>
-
-  <div class="card" data-k="stmartin">
-    <div class="name">St. Martin de Porres Shelter</div>
-    <div class="addr">1561 Alaskan Way S</div>
-    <div class="hours">Open <b>24 hours daily</b>.</div>
-    <ul class="fac"><li class="y">Beds</li><li class="q">Other services — ask</li></ul>
-    <div class="cost"><b>Men aged 50 and over only.</b></div>
-    <div class="actions"><a class="btn call" href="tel:+12063236341">Call</a></div>
+    
   </div>
 
   <h2>Food</h2>
@@ -250,41 +223,7 @@
     <ul class="fac"><li class="y">Free meal</li><li class="y">Anyone in need</li></ul>
     <div class="cost">Free. No ID, no sign-up.</div>
     <div class="actions"><a class="btn call" href="tel:+12062642091">Call</a></div>
-    <div class="note">The most dependable free meal near everything else on this page. The window is
-      short — be there by 4pm on a weekday.</div>
-  </div>
-
-  <h2>Replacing your ID, phone calls, mail</h2>
-
-  <div class="card" data-k="solanus">
-    <div class="name">Solanus Casey Center</div>
-    <div class="addr">804 9th Ave, at St. James Cathedral</div>
-    <div class="hours"><b>Mon–Thu, arrive between 1pm and 3pm.</b> Closed Fri, Sat, Sun.</div>
-    <ul class="fac">
-      <li class="y">WA ID &amp; licence help</li><li class="y">Birth certificates</li>
-      <li class="y">Phones for local calls</li><li class="y">Computers</li>
-      <li class="y">Socks, toiletries, ponchos</li>
-      <li class="n">No showers</li><li class="n">No beds</li><li class="n">No meals</li>
-    </ul>
-    <div class="cost">Free. Coffee, tea and snacks only — not a meal site.</div>
-    <div class="actions"><a class="btn call" href="tel:+12062230907">Call</a></div>
-    <div class="note"><b>Go here to replace an ID.</b> Several shelters want one. They also note that
-      money is tight and they cannot promise every request. Bus passes are given out by lottery on
-      the last Wednesday of the month.</div>
-  </div>
-
-  <div class="card" data-k="indiancenter">
-    <div class="name">Seattle Indian Center</div>
-    <div class="addr">1265 S Main St, Suite 105</div>
-    <div class="hours"><b>Mon–Fri 9:30am–5:30pm</b></div>
-    <ul class="fac">
-      <li class="y">Showers</li><li class="y">Laundry</li>
-      <li class="y">Mailing address</li><li class="n">No beds</li>
-    </ul>
-    <div class="cost">Free, open to everyone. A current state ID is needed to use the mail service.</div>
-    <div class="actions"><a class="btn call" href="tel:+12063298700">Call</a></div>
-    <div class="note">A fixed mailing address is worth setting up early — benefits, court letters and
-      job replies all need somewhere to go.</div>
+    
   </div>
 
   <h2>Getting into housing</h2>
@@ -300,9 +239,7 @@
     </ul>
     <div class="cost">Free. This is North Seattle's official way onto the county housing list.</div>
     <div class="actions"><a class="btn call" href="tel:+12066946700">Call</a></div>
-    <div class="note">This one is a long way north — about an hour on foot from downtown. Check the
-      distance below before setting out. There is a food pantry in the same building run by
-      FamilyWorks: <b>Tue 12–2pm, Thu 3–6pm, Fri 11am–1pm</b>.</div>
+    
   </div>
 
   <div class="card" data-k="ccs">
@@ -313,22 +250,8 @@
       <li class="n">No showers</li><li class="n">No meals</li></ul>
     <div class="cost">Free. Phone first and book a time.</div>
     <div class="actions"><a class="btn call" href="tel:+12063285707">Call</a></div>
-    <div class="note">Mostly offices, and walk-ins usually cannot be seen. If you want Catholic
-      Community Services in person, <b>go to the Solanus Casey Center above instead</b>.</div>
+    
   </div>
-
-  <div class="card">
-    <div class="name">Safe parking — Urban League</div>
-    <div class="addr">If you have a vehicle to sleep in</div>
-    <div class="hours">Lots open <b>7 days a week</b></div>
-    <ul class="fac"><li class="y">Legal place to park overnight</li></ul>
-    <div class="cost">Free.</div>
-    <div class="actions"><a class="btn call" href="tel:+12064613792">Call</a></div>
-  </div>
-
-  <div class="note" style="margin-top:14px">There is not enough housing in King County for everyone on
-    the list, and the wait is long. Getting assessed early still matters — but keep using shelters
-    while you wait.</div>
 
   <h2>Somewhere warm and dry</h2>
 
@@ -354,12 +277,17 @@
     <div class="cost">Free, run by Seattle Parks.</div>
   </div>
 
+  </section>
+
+  <section class="panel" id="p-lib" role="tabpanel" aria-labelledby="t-lib" hidden>
+<!--LIBRARIES-->
+  </section>
+
+  <section class="panel" id="p-wifi" role="tabpanel" aria-labelledby="t-wifi" hidden>
+<!--WIFI-->
+  </section>
+
   <footer>
-    <p><b>About job help:</b> none of these places advertise job placement, so we have not listed it
-      anywhere. The day centres — Compass especially — are the right people to ask, and they will know
-      who in Seattle does it.</p>
-    <p><b>About ID:</b> carry it if you have it. Only Bread of Life clearly asks for one, but it comes
-      up often. The Solanus Casey Center replaces lost Washington ID.</p>
     <p>Put together from the King County Crisis Connections shelter, food and services guides, the City
       of Seattle resource guide, and each organisation's own website. The county guides are a few months
       old, which is why calling first matters.</p>
@@ -374,18 +302,13 @@ const PLACES = {
   urbanreststop:{n:"Urban Rest Stop",lat:47.61626,lon:-122.33524,c:"wash",tel:"+12063320110",w:"Showers and laundry"},
   nightwatch:{n:"Operation Nightwatch",lat:47.59987,lon:-122.31389,c:"bed",tel:"+12063292099",w:"8pm meal, sends you to a bed"},
   breadoflife:{n:"Bread of Life Mission",lat:47.59989,lon:-122.33458,c:"bed",tel:"+12066823579",w:"Beds, showers, laundry, meals"},
-  ugm:{n:"Union Gospel Mission",lat:47.60383,lon:-122.33006,c:"bed",tel:"+12065014357",w:"Beds and meals — call first"},
-  booth:{n:"William Booth Center",lat:47.59529,lon:-122.32546,c:"bed",tel:"+12066210145",w:"Beds — call first"},
-  stmartin:{n:"St. Martin de Porres",lat:47.58852,lon:-122.33856,c:"bed",tel:"+12063236341",w:"Beds, men 50+ only"},
   cathedral:{n:"Cathedral Kitchen",lat:47.60715,lon:-122.32588,c:"food",tel:"+12062642091",w:"Free meal, weekdays 4–4:45pm"},
-  solanus:{n:"Solanus Casey Center",lat:47.60768,lon:-122.32579,c:"svc",tel:"+12062230907",w:"ID help, phones, computers"},
-  indiancenter:{n:"Seattle Indian Center",lat:47.59976,lon:-122.31445,c:"svc",tel:"+12063298700",w:"Showers, laundry, mail address"},
   solidground:{n:"Solid Ground",lat:47.66118,lon:-122.33890,c:"house",tel:"+12066946700",w:"Housing assessment, Weds 11–1"},
   ccs:{n:"Catholic Community Services",lat:47.60119,lon:-122.30157,c:"house",tel:"+12063285707",w:"Housing list — appointment only"},
   library:{n:"Seattle Central Library",lat:47.60671,lon:-122.33270,c:"svc",tel:"+12063864636",w:"Warm, computers, restrooms"},
   miller:{n:"Miller Community Center",lat:47.62185,lon:-122.30692,c:"wash",w:"Free public showers"}
 };
-const STATION={n:"King Street Station",lat:47.59845,lon:-122.32990,w:"Where you arrived — Amtrak"};
+const STATION={n:"Amtrak Station",lat:47.59845,lon:-122.32990,w:"Where you arrived — Amtrak"};
 const COLORS={bed:"--bed",wash:"--wash",food:"--food",svc:"--svc",house:"--house"};
 const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const walkUrl=(lat,lon)=>`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=walking`;
@@ -410,16 +333,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 
 const markers={};
 
-// Cathedral Kitchen and Solanus Casey share the St James Cathedral block, so one
-// pin hides the other. Nudge the pair apart far enough to tap; the walking links
-// still use the true coordinates.
-// Same for the pairs that share a street corner. Each nudge is ~100m, smaller than
-// the block they sit on, so the pin still points at the right place to walk to.
-const NUDGE={
-  cathedral:[-0.00055,0], solanus:[0.00055,0],
-  compass:[0.00045,0], breadoflife:[-0.00045,0],
-  nightwatch:[0.00075,0], indiancenter:[-0.00075,0]
-};
+// Compass and Bread of Life share a corner, so one pin hid the other. ~100m nudge,
+// smaller than the block; walking links still use the true coordinates.
+const NUDGE={compass:[0.00045,0], breadoflife:[-0.00045,0]};
 
 Object.entries(PLACES).forEach(([k,p])=>{
   const off=NUDGE[k]||[0,0];
@@ -438,7 +354,7 @@ L.marker([STATION.lat,STATION.lon],{
     html:'<div style="width:26px;height:26px;border-radius:50%;background:#111;'+
          'border:3px solid #fff;box-shadow:0 0 0 1px #111;display:flex;'+
          'align-items:center;justify-content:center;color:#fff;font-size:14px">&#9733;</div>'})
-}).addTo(map).bindPopup('<b>King Street Station</b><br>Where you arrived.');
+}).addTo(map).bindPopup('<b>Amtrak Station</b><br>Where you arrived (King Street Station).');
 // Fitting every pin forces the zoom so far out that the downtown ones become an
 // untappable clump. Frame the dense core instead; the two distant places carry their
 // walking time on the card, and the button below sorts everything by distance.
@@ -452,6 +368,15 @@ if(L.Browser.mobile){
   el.addEventListener('touchend',()=>{ map.dragging.disable(); },{passive:true});
   document.getElementById('maphint').hidden=false;
 }
+
+// ── Tabs ──
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+    document.querySelectorAll('.panel').forEach(p=>p.hidden=(p.id!==b.getAttribute('aria-controls')));
+    window.scrollTo({top:0,behavior:'instant'});
+  });
+});
 
 // ── Distances ──
 const btn=document.getElementById('near'), list=document.getElementById('nearlist');
