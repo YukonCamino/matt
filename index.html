@@ -11,13 +11,13 @@
   :root{
     --bg:#fff;--fg:#111;--muted:#5a5a5a;--line:#dcdcdc;--card:#fff;
     --accent:#0b5fff;--yes:#14703a;--no:#8a8a8a;--maybe:#8a5a00;
-    --warn-bg:#fff3dd;--warn-fg:#6b4300;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
+    --warn-bg:#fff3dd;--warn-fg:#6b4300;--top-bg:#eaf7ee;--top-line:#1f8a4c;--top-note:#d3efdc;--urgent-bg:#ffe8e8;--urgent-fg:#8a1414;
     --bed:#c2410c;--wash:#0b5fff;--food:#14703a;--svc:#7c3aed;--house:#555;--lib:#0e7490;--wifi:#7c3aed;--cafe:#92400e;
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --bg:#111;--fg:#f2f2f2;--muted:#a9a9a9;--line:#333;--card:#1b1b1b;
     --accent:#7fb0ff;--yes:#5fcf8e;--no:#777;--maybe:#e8b45f;
-    --warn-bg:#3a2d12;--warn-fg:#ffd79a;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
+    --warn-bg:#3a2d12;--warn-fg:#ffd79a;--top-bg:#13281b;--top-line:#5fcf8e;--top-note:#1d3a27;--urgent-bg:#3a1414;--urgent-fg:#ffb3b3;
     --bed:#fb923c;--wash:#7fb0ff;--food:#5fcf8e;--svc:#c4a5fd;--house:#aaa;--lib:#5ad1e6;--wifi:#c4a5fd;--cafe:#e0a36b;
   }}
   html{-webkit-text-size-adjust:100%}
@@ -77,6 +77,9 @@
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:14px 15px;margin-bottom:12px}
+  .card.top{background:var(--top-bg);border:2px solid var(--top-line)}
+  .card.top .name::before{content:'\2605';color:var(--top-line);margin-right:7px}
+  .card.top .note{background:var(--top-note);color:var(--fg)}
   .card.flag{border-color:var(--maybe);border-width:2px}
   .name{font-weight:700;font-size:18px;line-height:1.3}
   .addr{color:var(--muted);font-size:15px;margin-top:3px}
@@ -147,7 +150,7 @@
 
   <h2>Showers, laundry, help — best first stop</h2>
 
-  <div class="card" data-k="compass">
+  <div class="card top" data-k="compass">
     <div class="name">Compass Hygiene Center &amp; Day Center</div>
     <div class="addr">210 Alaskan Way S — look for the orange archway at S Washington St</div>
     <div class="hours">Showers &amp; laundry: <b>Mon–Fri 8:30am–4pm, Sat 8am–12pm</b><br>
